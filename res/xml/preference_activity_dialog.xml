@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+        <PreferenceScreen
+            android:key="pref_dialog_1"
+	        android:title="dialog 1">
+        </PreferenceScreen>
+         <PreferenceScreen
+            android:key="pref_dialog_2"
+	        android:title="dialog 2">
+        </PreferenceScreen>
+        <PreferenceScreen
+            android:key="pref_dialog_3"
+	        android:title="dialog 3">
+        </PreferenceScreen>
+        <PreferenceScreen
+            android:key="pref_dialog_4"
+	        android:title="dialog 4">
+        </PreferenceScreen>
+        <PreferenceScreen
+            android:key="pref_dialog_5"
+	        android:title="dialog 5">
+        </PreferenceScreen>
+        <PreferenceScreen
+            android:key="pref_dialog_6"
+	        android:title="dialog 6">
+        </PreferenceScreen>
+</PreferenceScreen>
