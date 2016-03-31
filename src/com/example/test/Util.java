@@ -1,4 +1,4 @@
-package com.example.test.qqauth;
+package com.example.test;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;

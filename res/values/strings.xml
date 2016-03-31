@@ -50,7 +50,7 @@
     <color name="tab_title_pressed_color">#16982b</color>
     <color name="tab_middle_line_color">#5c882c</color>
     <string name="open_prompt_title">Open via</string>
-        <string name="AcceleX">X方向上加速度：</string>
+    <string name="AcceleX">X方向上加速度：</string>
     <string name="AcceleY">Y方向上加速度：</string>
     <string name="AcceleZ">Z方向上加速度：</string>
     <string name="orientationX">X方向的角度：</string>
@@ -80,4 +80,14 @@
     <string name="RotationX">沿X方向旋转矢量：</string>
     <string name="RotationY">沿Y方向旋转矢量：</string>
     <string name="RotationZ">沿Z方向旋转矢量：</string>
+    <string name="s1">SYSTEM_UI_FLAG_VISIBLE</string>  
+    <string name="s2">INVISIBLE</string>  
+    <string name="s3">SYSTEM_UI_FLAG_FULLSCREEN</string>  
+    <string name="s4">SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN</string>  
+    <string name="s5">SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION</string>  
+    <string name="s6">SYSTEM_UI_LAYOUT_FLAGS</string>  
+    <string name="s7">SYSTEM_UI_FLAG_HIDE_NAVIGATION</string>  
+    <string name="s8">SYSTEM_UI_FLAG_LOW_PROFILE</string>  
+    <string name="GetAppName">get_app_name</string>
+    <string name="GetAppVersionName">get_app_version name</string>
 </resources>

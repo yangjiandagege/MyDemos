@@ -5,20 +5,14 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
 
-//跟App相关的辅助类
 public class AppUtils
 {
-
 	private AppUtils()
 	{
 		/* cannot be instantiated */
 		throw new UnsupportedOperationException("cannot be instantiated");
-
 	}
 
-	/**
-	 * 获取应用程序名称
-	 */
 	public static String getAppName(Context context)
 	{
 		try
@@ -35,12 +29,6 @@ public class AppUtils
 		return null;
 	}
 
-	/**
-	 * [获取应用程序版本名称信息]
-	 * 
-	 * @param context
-	 * @return 当前应用的版本名称
-	 */
 	public static String getVersionName(Context context)
 	{
 		try
@@ -56,5 +44,4 @@ public class AppUtils
 		}
 		return null;
 	}
-
 }

@@ -1,9 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceScreen
+        android:summary="test some android api"
+        android:title="Common tests">
+        <PreferenceScreen
+            android:key="@string/GetAppName"
+            android:title="get app name">
+        </PreferenceScreen>
+        <PreferenceScreen
+            android:key="@string/GetAppVersionName"
+            android:title="get app version name">
+        </PreferenceScreen>
+    </PreferenceScreen>
     
     <PreferenceScreen
         android:title="Layouts">
-        
         <PreferenceScreen
 	        android:title="Life Cycle">
 	        <intent
@@ -301,5 +312,13 @@
             android:action="android.intent.action.SENSORS"
             android:targetPackage="com.example.test"
             android:targetClass="com.example.test.sensors.ListViewActivity" />
+    </PreferenceScreen>
+    
+    <PreferenceScreen
+        android:title="Handle systemui">
+        <intent
+            android:action="android.intent.action.HANDLESYSTEMUI"
+            android:targetPackage="com.example.test"
+            android:targetClass="com.example.test.handlesystemui.MainActivity" />
     </PreferenceScreen>
 </PreferenceScreen>
