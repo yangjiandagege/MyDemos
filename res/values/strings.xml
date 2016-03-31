@@ -90,4 +90,6 @@
     <string name="s8">SYSTEM_UI_FLAG_LOW_PROFILE</string>  
     <string name="GetAppName">get_app_name</string>
     <string name="GetAppVersionName">get_app_version name</string>
+    <string name="Serializable">Serializable</string>
+    <string name="Unserializable">Unserializable</string>
 </resources>
