@@ -11,6 +11,14 @@
             android:key="@string/GetAppVersionName"
             android:title="get app version name">
         </PreferenceScreen>
+        <PreferenceScreen
+            android:key="@string/Serializable"
+            android:title="Serializable">
+        </PreferenceScreen>
+        <PreferenceScreen
+            android:key="@string/Unserializable"
+            android:title="Unserializable">
+        </PreferenceScreen>
     </PreferenceScreen>
     
     <PreferenceScreen
