@@ -7,21 +7,21 @@
         android:id="@+id/bindButton"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:text="绑定服务" />
+        android:text="bind" />
     <Button
-        android:id="@+id/fuc01Button"
+        android:id="@+id/callButton"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:text="测试接口01" />
+        android:text="common call" />
     <Button
-        android:id="@+id/fuc02Button"
+        android:id="@+id/callbackButton"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:text="测试接口02(回调)" />
+        android:text="callback" />
      <Button
-        android:id="@+id/fuc03Button"
+        android:id="@+id/objectCallButton"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:text="测试接口03(复杂数据类型)" />
+        android:text="object call" />
 
 </LinearLayout>

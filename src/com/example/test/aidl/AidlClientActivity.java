@@ -7,12 +7,15 @@ import android.content.ComponentName;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.IBinder;
+import android.os.Looper;
 import android.os.RemoteException;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.Toast;
 
 public class AidlClientActivity extends Activity implements OnClickListener {
 	private ITaskBinder mService;
@@ -21,16 +24,22 @@ public class AidlClientActivity extends Activity implements OnClickListener {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_aidl);
-        Button fuc01=(Button)findViewById(R.id.fuc01Button);
-        fuc01.setOnClickListener(this);
-        Button fuc02=(Button)findViewById(R.id.fuc02Button);
-        fuc02.setOnClickListener(this);
-        Button fuc03=(Button)findViewById(R.id.fuc03Button);
-        fuc03.setOnClickListener(this);
-        Button bindBtn=(Button)findViewById(R.id.bindButton);
-        bindBtn.setOnClickListener(this);
+        findViewById(R.id.callButton).setOnClickListener(this);
+        findViewById(R.id.callbackButton).setOnClickListener(this);
+        findViewById(R.id.objectCallButton).setOnClickListener(this);
+        findViewById(R.id.bindButton).setOnClickListener(this);
     }
     
+	private void ToastInActivity(final String msg){
+		Handler handler=new Handler(Looper.getMainLooper());
+		 handler.post(new Runnable(){
+			 public void run(){
+				 Toast.makeText(getApplicationContext(), "From AidlActivity : "+msg, Toast.LENGTH_LONG).show();
+			 } 
+		 }
+	 );
+	}
+	
 	@Override
 	public void onClick(View v) {
 		switch(v.getId()){
@@ -38,31 +47,31 @@ public class AidlClientActivity extends Activity implements OnClickListener {
 		      Intent intent=new Intent("com.example.test.aidl.AidlService");
 			  bindService(intent,mConnection,BIND_AUTO_CREATE);
 			  break;
-		  case R.id.fuc01Button:
+		  case R.id.callButton:
 			  try {
-				mService.fuc01();
+				mService.commonCall();
+			  } catch (RemoteException e) {
+				e.printStackTrace();
+			  }
+			  break;
+		  case R.id.callbackButton:
+			  try {
+				mService.callback();
 			} catch (RemoteException e) {
 				e.printStackTrace();
 			}
 			  break;
-		  case R.id.fuc02Button:
-			  try {
-				mService.fuc02();
-			} catch (RemoteException e) {
-				e.printStackTrace();
-			}
-			  break;
-		  case R.id.fuc03Button:
+		  case R.id.objectCallButton:
 			  try {
 				Person person=new Person();
 				person.setSex(0);
 				person.setName("YangJian");
 				person.setDescrip("CEO");
-				String ret=mService.fuc03(person);
-				Log.v(TAG,"ret="+ret);
-			} catch (RemoteException e) {
+				String ret=mService.objectCall(person);
+				ToastInActivity("ret = "+ret);
+			  } catch (RemoteException e) {
 				e.printStackTrace();
-			}
+			  }
 			  break;
 		  default:
 			  break;
@@ -78,7 +87,6 @@ public class AidlClientActivity extends Activity implements OnClickListener {
 			} catch (RemoteException e) {
 				e.printStackTrace();
 			}
-			Log.v(TAG,"onServiceConnected");
 		}
 
 		@Override
@@ -89,14 +97,13 @@ public class AidlClientActivity extends Activity implements OnClickListener {
 				e.printStackTrace();
 			}
 			mService=null;
-			Log.v(TAG,"onServiceDisconnected");
 		}
 	};
 	
 	private final ITaskCallBack.Stub mCallBack=new ITaskCallBack.Stub() {
 		@Override
 		public void onActionBack(String str) throws RemoteException {
-			Log.v(TAG,"onActionBack str="+str);
+			ToastInActivity("onActionBack str = "+str);
 		}
 	};
 }
