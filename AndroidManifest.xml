@@ -39,6 +39,25 @@
         </activity>
         
         <activity
+            android:name="com.example.test.aidl.ClientActivity"
+            android:label="@string/app_name" >
+            <intent-filter>
+                <action android:name="android.intent.action.AIDL" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+		 <service android:name="com.example.test.aidl.AidlService" android:process=":remote">
+			<intent-filter>
+				<action android:name="com.example.test.aidl.AidlService" />
+			</intent-filter>
+		</service>
+		<service android:name="com.example.test.aidl.MessengerService" android:process=":remote">
+			<intent-filter>
+				<action android:name="com.example.test.aidl.MessengerService" />
+			</intent-filter>
+		</service>
+        
+        <activity
             android:name="com.example.test.layout.CycleActivity"
             android:label="@string/app_name" >
             <intent-filter>
@@ -300,20 +319,6 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-        
-        <activity
-            android:name="com.example.test.aidl.AidlClientActivity"
-            android:label="@string/app_name" >
-            <intent-filter>
-                <action android:name="android.intent.action.AIDL" />
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-        </activity>
-		 <service android:name="com.example.test.aidl.AidlService" android:process=":remote">
-			<intent-filter>
-				<action android:name="com.example.test.aidl.AidlService" />
-			</intent-filter>
-		</service>
 		
 		<activity
             android:name="com.example.test.location.LocationActivity"

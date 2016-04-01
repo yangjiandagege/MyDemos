@@ -1,40 +1,22 @@
 package com.example.test.aidl;
 
-import com.example.test.Util;
-
 import android.app.Service;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Looper;
 import android.os.RemoteException;
-import android.util.Log;
 import android.widget.Toast;
 
 public class AidlService extends Service {
 	
-    public final String TAG="AidlService";
     private ITaskCallBack mTaskCallBack;
-    private Context mContext;
     @Override
 	public void onCreate(){
-    	mContext = this;
-		Log.v(TAG,"onCreate()...");
 	}
 	@Override
 	public IBinder onBind(Intent arg0) {
 		return mBinder;
-	}
-    
-	private void ToastInServer(final String msg){
-		Handler handler=new Handler(Looper.getMainLooper());
-		 handler.post(new Runnable(){
-			 public void run(){
-				 Toast.makeText(getApplicationContext(), "From AidlService : "+msg, Toast.LENGTH_LONG).show();
-			 } 
-		 }
-	 );
 	}
 	
 	private final ITaskBinder.Stub mBinder=new ITaskBinder.Stub() {
@@ -77,4 +59,14 @@ public class AidlService extends Service {
 			return ret;
 		}
 	};
+    
+	private void ToastInServer(final String msg){
+		Handler handler=new Handler(Looper.getMainLooper());
+		 handler.post(new Runnable(){
+			 public void run(){
+				 Toast.makeText(getApplicationContext(), "From AidlService : "+msg, Toast.LENGTH_LONG).show();
+			 } 
+		 }
+	 );
+	}
 }

@@ -22,6 +22,14 @@
     </PreferenceScreen>
     
     <PreferenceScreen
+        android:title="AIDL">
+        <intent
+            android:action="android.intent.action.AIDL"
+            android:targetPackage="com.example.test"
+            android:targetClass="com.example.test.aidl.ClientActivity" />
+    </PreferenceScreen>
+    
+    <PreferenceScreen
         android:title="Layouts">
         <PreferenceScreen
 	        android:title="Life Cycle">
@@ -231,14 +239,6 @@
             android:action="android.intent.action.VIEWPAGER"
             android:targetPackage="com.example.test"
             android:targetClass="com.example.test.viewpager.MainActivity" />
-    </PreferenceScreen>
-    
-	<PreferenceScreen
-        android:title="AIDL">
-        <intent
-            android:action="android.intent.action.AIDL"
-            android:targetPackage="com.example.test"
-            android:targetClass="com.example.test.aidl.AidlClientActivity" />
     </PreferenceScreen>
     
 	<PreferenceScreen
