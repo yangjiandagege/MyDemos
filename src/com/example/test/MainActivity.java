@@ -12,6 +12,8 @@ import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.Preference.OnPreferenceClickListener;
 import android.preference.PreferenceActivity;
+import android.util.Log;
+
 import com.example.test.utils.*;
 
 public class MainActivity extends PreferenceActivity implements OnPreferenceClickListener{
