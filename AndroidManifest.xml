@@ -442,5 +442,14 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
+        <activity
+            android:name="com.example.test.binderpool.BinderPoolActivity"
+            android:label="@string/app_name" >
+            <intent-filter>
+                <action android:name="android.intent.action.BINDERPOOL" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        <service android:name="com.example.test.binderpool.BinderPoolService" android:process=":remote"></service>
     </application>
 </manifest>

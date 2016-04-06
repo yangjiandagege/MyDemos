@@ -329,4 +329,12 @@
             android:targetPackage="com.example.test"
             android:targetClass="com.example.test.handlesystemui.MainActivity" />
     </PreferenceScreen>
+    
+    <PreferenceScreen
+        android:title="Binder pool">
+        <intent
+            android:action="android.intent.action.BINDERPOOL"
+            android:targetPackage="com.example.test"
+            android:targetClass="com.example.test.binderpool.BinderPoolActivity" />
+    </PreferenceScreen>
 </PreferenceScreen>
