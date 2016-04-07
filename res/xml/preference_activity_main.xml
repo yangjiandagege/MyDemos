@@ -20,7 +20,7 @@
             android:title="Unserializable">
         </PreferenceScreen>
     </PreferenceScreen>
-    
+
     <PreferenceScreen
         android:title="AIDL">
         <intent
@@ -336,5 +336,13 @@
             android:action="android.intent.action.BINDERPOOL"
             android:targetPackage="com.example.test"
             android:targetClass="com.example.test.binderpool.BinderPoolActivity" />
+    </PreferenceScreen>
+    
+    <PreferenceScreen
+        android:title="Touch test">
+        <intent
+            android:action="android.intent.action.TOUCH"
+            android:targetPackage="com.example.test"
+            android:targetClass="com.example.test.touch.MainActivity" />
     </PreferenceScreen>
 </PreferenceScreen>

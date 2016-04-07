@@ -1,0 +1,24 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
+
+    <com.example.test.touch.MyViewGroupA
+        android:background="@+color/white"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <com.example.test.touch.MyViewGroupB
+            android:background="@+color/red"
+            android:layout_width="300dip"
+            android:layout_height="300dip">
+            <com.example.test.touch.MyViewA
+                android:background="@+color/yellow"
+                android:layout_width="100dip"
+                android:layout_height="100dip" />
+            <com.example.test.touch.MyViewB
+                android:background="@+color/blue"
+                android:layout_width="100dip"
+                android:layout_height="100dip"/>
+        </com.example.test.touch.MyViewGroupB>
+    </com.example.test.touch.MyViewGroupA>
+</RelativeLayout>
