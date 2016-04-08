@@ -42,7 +42,7 @@ public class MainActivity extends PreferenceActivity implements OnPreferenceClic
         }
         return true;
     }
-    
+
     void getAppName(){
     	Util.showResultDialog(this, AppUtils.getAppName(this), "App name :");
     }
