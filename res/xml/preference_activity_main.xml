@@ -345,4 +345,15 @@
             android:targetPackage="com.example.test"
             android:targetClass="com.example.test.touch.MainActivity" />
     </PreferenceScreen>
+    
+    <PreferenceScreen
+        android:title="DIY Views">
+	    <PreferenceScreen
+	        android:title="Sliding conflict">
+	        <intent
+	            android:action="android.intent.action.SLIDINGCONFLICT"
+	            android:targetPackage="com.example.test"
+	            android:targetClass="com.example.test.diyviews.slidingconflict.MainActivity" />
+	    </PreferenceScreen>
+    </PreferenceScreen>
 </PreferenceScreen>
