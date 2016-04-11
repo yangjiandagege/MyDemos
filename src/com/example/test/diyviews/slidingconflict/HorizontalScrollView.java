@@ -8,6 +8,7 @@ import android.view.VelocityTracker;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.View.MeasureSpec;
+
 import android.widget.Scroller;
 
 public class HorizontalScrollView extends ViewGroup {
@@ -43,6 +44,7 @@ public class HorizontalScrollView extends ViewGroup {
     }
 
     private void init() {
+
         mScroller = new Scroller(getContext());
         mVelocityTracker = VelocityTracker.obtain();
     }
@@ -85,6 +87,7 @@ public class HorizontalScrollView extends ViewGroup {
         mLastY = y;
         mLastXIntercept = x;
         mLastYIntercept = y;
+
 
         return intercepted;
     }
@@ -129,6 +132,7 @@ public class HorizontalScrollView extends ViewGroup {
 
         mLastX = x;
         mLastY = y;
+
         return true;
     }
 
@@ -160,10 +164,12 @@ public class HorizontalScrollView extends ViewGroup {
             measuredHeight = childView.getMeasuredHeight();
             setMeasuredDimension(measuredWidth, measuredHeight);
         }
+
     }
 
     @Override
     protected void onLayout(boolean changed, int l, int t, int r, int b) {
+
         int childLeft = 0;
         final int childCount = getChildCount();
         mChildrenSize = childCount;
@@ -185,6 +191,7 @@ public class HorizontalScrollView extends ViewGroup {
         invalidate();
     }
 
+
     @Override
     public void computeScroll() {
         if (mScroller.computeScrollOffset()) {
@@ -195,7 +202,9 @@ public class HorizontalScrollView extends ViewGroup {
 
     @Override
     protected void onDetachedFromWindow() {
+
         mVelocityTracker.recycle();
         super.onDetachedFromWindow();
+
     }
 }

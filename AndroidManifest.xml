@@ -38,6 +38,14 @@
             </intent-filter>
         </activity>
         
+         <activity
+            android:name="com.example.test.common.MainActivity"
+            android:label="@string/app_name" >
+            <intent-filter>
+                <action android:name="android.intent.action.COMMON" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
         <activity
             android:name="com.example.test.aidl.ClientActivity"
             android:label="@string/app_name" >

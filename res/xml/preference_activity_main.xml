@@ -3,22 +3,10 @@
     <PreferenceScreen
         android:summary="test some android api"
         android:title="Common tests">
-        <PreferenceScreen
-            android:key="@string/GetAppName"
-            android:title="get app name">
-        </PreferenceScreen>
-        <PreferenceScreen
-            android:key="@string/GetAppVersionName"
-            android:title="get app version name">
-        </PreferenceScreen>
-        <PreferenceScreen
-            android:key="@string/Serializable"
-            android:title="Serializable">
-        </PreferenceScreen>
-        <PreferenceScreen
-            android:key="@string/Unserializable"
-            android:title="Unserializable">
-        </PreferenceScreen>
+        <intent
+            android:action="android.intent.action.COMMON"
+            android:targetPackage="com.example.test"
+            android:targetClass="com.example.test.common.MainActivity" />
     </PreferenceScreen>
 
     <PreferenceScreen

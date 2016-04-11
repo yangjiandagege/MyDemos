@@ -18,7 +18,6 @@ import android.widget.Toast;
 import android.widget.AdapterView.OnItemClickListener;
 
 public class MainActivity extends Activity{
-	
     private HorizontalScrollView mListContainer;
     @Override  
     public void onCreate(Bundle savedInstanceState) {  
