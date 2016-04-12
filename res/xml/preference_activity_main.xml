@@ -254,14 +254,6 @@
     </PreferenceScreen>
     
 	<PreferenceScreen
-        android:title="Dialog">
-        <intent
-            android:action="android.intent.action.DIALOG"
-            android:targetPackage="com.example.test"
-            android:targetClass="com.example.test.dialog.DialogActivity" />
-    </PreferenceScreen>
-    
-	<PreferenceScreen
         android:title="Notification">
         <intent
             android:action="android.intent.action.NOTIFICATION"
