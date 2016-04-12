@@ -64,115 +64,7 @@
 				<action android:name="com.example.test.aidl.MessengerService" />
 			</intent-filter>
 		</service>
-        
-        <activity
-            android:name="com.example.test.layout.CycleActivity"
-            android:label="@string/app_name" >
-            <intent-filter>
-                <action android:name="android.intent.action.CYCLE" />
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-        </activity>
-        
-        <activity
-            android:name="com.example.test.layout.FrameActivity"
-            android:label="@string/app_name" >
-            <intent-filter>
-                <action android:name="android.intent.action.FRAME" />
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-        </activity>
-        
-        <activity
-            android:name="com.example.test.layout.MergeActivity"
-            android:label="@string/app_name" >
-            <intent-filter>
-                <action android:name="android.intent.action.MERGE" />
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-        </activity>
-        
-        <activity
-            android:name="com.example.test.layout.LinearActivity"
-            android:label="@string/app_name" >
-            <intent-filter>
-                <action android:name="android.intent.action.LINEAR" />
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-        </activity>
-        
-        <activity
-            android:name="com.example.test.layout.RelativeActivity"
-            android:label="@string/app_name" >
-            <intent-filter>
-                <action android:name="android.intent.action.RELATIVE" />
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-        </activity>
-        
-        <activity
-            android:name="com.example.test.layout.TableActivity"
-            android:label="@string/app_name" >
-            <intent-filter>
-                <action android:name="android.intent.action.TABLE" />
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.LAYOUT" />
-            </intent-filter>
-        </activity>
-        
-        <activity
-            android:name="com.example.test.layout.ReusableActivity"
-            android:label="@string/app_name" >
-            <intent-filter>
-                <action android:name="android.intent.action.REUSABLE" />
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-        </activity> 
-        
-        <activity
-            android:name="com.example.test.controls.ButtonActivity"
-            android:label="@string/app_name" >
-            <meta-data
-    		android:name="com.test.meta_data1"
-    		android:value="x_key" />
-			<meta-data
-    		android:name="com.test.meta_data2"
-    		android:value="@string/meta_data2" />
-			<meta-data
-    		android:name="com.test.meta_data3"
-    		android:resource="@drawable/ic_launcher" />
-            <intent-filter>
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-        </activity>
-     
-        <activity
-            android:name="com.example.test.controls.ColorListviewActivity"
-            android:label="@string/app_name" >
-            <intent-filter>
-                <action android:name="android.intent.action.controls.COLORLISTVIEW" />
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-        </activity>
-        
-        <activity
-            android:name="com.example.test.controls.ScrollviewActivity"
-            android:label="@string/app_name" >
-            <intent-filter>
-                <action android:name="android.intent.action.controls.SCROLLVIEW" />
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-        </activity>
-        
-        <activity
-            android:name="com.example.test.controls.OthersActivity"
-            android:label="@string/app_name" >
-            <intent-filter>
-                <action android:name="android.intent.action.controls.OTHERS" />
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-        </activity>
-        
+		       
         <activity
             android:name="com.example.test.fileio.SharedPreferencesActivity"
             android:label="@string/app_name" >
@@ -309,16 +201,7 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-        
-        <activity
-            android:name="com.example.test.ndk.MyJni"
-            android:label="@string/app_name" >
-            <intent-filter>
-                <action android:name="android.intent.action.NDK" />
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-        </activity>
-		
+
 		<activity
             android:name="com.example.test.location.LocationActivity"
             android:label="@string/app_name" >
@@ -336,25 +219,7 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-        
-	   <activity
-            android:name="com.example.test.application.FirstActivity"
-            android:label="@string/app_name" >
-            <intent-filter>
-                <action android:name="android.intent.action.APPLICATION" />
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-        </activity>
-        
-	   <activity
-            android:name="com.example.test.application.SecondActivity"
-            android:label="@string/app_name" >
-            <intent-filter>
-                <action android:name="android.intent.action.APPLICATION" />
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-        </activity>
-        
+
 	   	<activity
             android:name="com.example.test.contentobserver.MainActivity"
             android:label="@string/app_name" >

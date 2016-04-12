@@ -16,102 +16,7 @@
             android:targetPackage="com.example.test"
             android:targetClass="com.example.test.aidl.ClientActivity" />
     </PreferenceScreen>
-    
-    <PreferenceScreen
-        android:title="Layouts">
-        <PreferenceScreen
-	        android:title="Life Cycle">
-	        <intent
-	            android:action="android.intent.action.CYCLE"
-	            android:targetPackage="com.example.test"
-	            android:targetClass="com.example.test.layout.CycleActivity" />
-        </PreferenceScreen>
         
-        <PreferenceScreen
-	        android:title="Frame Layout">
-	        <intent
-	            android:action="android.intent.action.FRAME"
-	            android:targetPackage="com.example.test"
-	            android:targetClass="com.example.test.layout.FrameActivity" />
-        </PreferenceScreen>
-        
-        <PreferenceScreen
-	        android:title="Linear Layout">
-	        <intent
-	            android:action="android.intent.action.LINEAR"
-	            android:targetPackage="com.example.test"
-	            android:targetClass="com.example.test.layout.LinearActivity" />
-        </PreferenceScreen>
-        
-        <PreferenceScreen
-	        android:title="Relative Layout">
-	        <intent
-	            android:action="android.intent.action.RELATIVE"
-	            android:targetPackage="com.example.test"
-	            android:targetClass="com.example.test.layout.RelativeActivity" />
-        </PreferenceScreen>
-        
-        <PreferenceScreen
-	        android:title="Reusable Layout">
-	        <intent
-	            android:action="android.intent.action.REUSABLE"
-	            android:targetPackage="com.example.test"
-	            android:targetClass="com.example.test.layout.ReusableActivity" />
-        </PreferenceScreen>
-        
-        <PreferenceScreen
-	        android:title="Table Layout">
-	        <intent
-	            android:action="android.intent.action.TABLE"
-	            android:targetPackage="com.example.test"
-	            android:targetClass="com.example.test.layout.TableActivity" />
-        </PreferenceScreen>
-        
-        <PreferenceScreen
-	        android:title="Merge Layout">
-	        <intent
-	            android:action="android.intent.action.MERGE"
-	            android:targetPackage="com.example.test"
-	            android:targetClass="com.example.test.layout.MergeActivity" />
-        </PreferenceScreen>
-    </PreferenceScreen>
-    
-	<PreferenceScreen
-        android:title="Controls">
-        
-        <PreferenceScreen
-	        android:title="Button">
-	        <intent
-	            android:action="android.intent.action.BUTTON"
-	            android:targetPackage="com.example.test"
-	            android:targetClass="com.example.test.controls.ButtonActivity" />
-        </PreferenceScreen>
-        
-        <PreferenceScreen
-	        android:title="Scrollview">
-	        <intent
-	            android:action="android.intent.action.controls.SCROLLVIEW"
-	            android:targetPackage="com.example.test"
-	            android:targetClass="com.example.test.controls.ScrollviewActivity" />
-        </PreferenceScreen>
-        
-        <PreferenceScreen
-	        android:title="Color Listview">
-	        <intent
-	            android:action="android.intent.action.controls.COLORLISTVIEW"
-	            android:targetPackage="com.example.test"
-	            android:targetClass="com.example.test.controls.ColorListviewActivity" />
-        </PreferenceScreen>
-        
-        <PreferenceScreen
-	        android:title="Others">
-	        <intent
-	            android:action="android.intent.action.controls.OTHERS"
-	            android:targetPackage="com.example.test"
-	            android:targetClass="com.example.test.controls.OthersActivity" />
-        </PreferenceScreen>
-    </PreferenceScreen>
-    
     <PreferenceScreen
         android:title="File IO">
         <PreferenceScreen
@@ -246,14 +151,6 @@
     </PreferenceScreen>
     
     <PreferenceScreen
-        android:title="Test application">
-        <intent
-            android:action="android.intent.action.APPLICATION"
-            android:targetPackage="com.example.test"
-            android:targetClass="com.example.test.application.FirstActivity" />
-    </PreferenceScreen>
-    
-    <PreferenceScreen
         android:title="ContentObserver">
         <intent
             android:action="android.intent.action.CONTENTOBSERVER"
@@ -285,15 +182,7 @@
             android:targetPackage="com.example.test"
             android:targetClass="com.example.test.sensors.ListViewActivity" />
     </PreferenceScreen>
-    
-    <PreferenceScreen
-        android:title="Handle systemui">
-        <intent
-            android:action="android.intent.action.HANDLESYSTEMUI"
-            android:targetPackage="com.example.test"
-            android:targetClass="com.example.test.handlesystemui.MainActivity" />
-    </PreferenceScreen>
-    
+ 
     <PreferenceScreen
         android:title="Binder pool">
         <intent
