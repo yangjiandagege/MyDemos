@@ -4,10 +4,12 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.StreamCorruptedException;
 import java.util.HashMap;
+import java.util.List;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -19,6 +21,7 @@ import android.preference.Preference;
 import android.preference.Preference.OnPreferenceClickListener;
 import android.preference.PreferenceActivity;
 import android.util.Log;
+import android.util.Xml;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -43,6 +46,8 @@ public class MainActivity extends Activity  implements OnClickListener{
 	private static final int DIALOG_4  = GET_APP_NAME + 7;
 	private static final int DIALOG_5  = GET_APP_NAME + 8;
 	private static final int DIALOG_6  = GET_APP_NAME + 9;
+	private static final int XML_TO_PRODUCT  = GET_APP_NAME + 10;
+	
 	@Override
 	public void onCreate(Bundle savedInstanceState){
 		super.onCreate(savedInstanceState);
@@ -58,6 +63,7 @@ public class MainActivity extends Activity  implements OnClickListener{
 		addButtion(myLayout, DIALOG_4, "dialog4");
 		addButtion(myLayout, DIALOG_5, "dialog5");
 		addButtion(myLayout, DIALOG_6, "dialog6");
+		addButtion(myLayout, XML_TO_PRODUCT, "xml to product");
 		setContentView(myLayout);
 	}
 	
@@ -102,6 +108,9 @@ public class MainActivity extends Activity  implements OnClickListener{
 				break;
 			case DIALOG_6:
 				dialog_6();
+				break;
+			case XML_TO_PRODUCT:
+				xmlToObject();
 				break;
 		}
 	}
@@ -285,4 +294,24 @@ public class MainActivity extends Activity  implements OnClickListener{
     	builder.setNegativeButton("取消", null);
     	builder.create().show();  
     }
+    
+	public void xmlToObject()
+	{
+		try {
+			InputStream is = getResources().openRawResource(R.raw.products);
+			XML2Product xml2Product = new XML2Product();
+			android.util.Xml.parse(is, Xml.Encoding.UTF_8, xml2Product);
+
+			List<Product> products = xml2Product.getProducts();
+			String msg = "The number of products is " + products.size() + "\n";
+			for (Product product : products) {
+				msg += "id : " + product.getId() + "  name : " + product.getName()
+						+ "  price : " + product.getPrice() + "\n";
+			}
+			new AlertDialog.Builder(this).setTitle("Info").setMessage(msg)
+					.setPositiveButton("ok", null).show();
+		}catch (Exception e){
+			e.printStackTrace();
+		}
+	}
 }

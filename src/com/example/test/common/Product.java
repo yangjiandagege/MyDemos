@@ -1,4 +1,4 @@
-package com.example.test.xml;
+package com.example.test.common;
 
 public class Product
 {

@@ -1,4 +1,4 @@
-package com.example.test.xml;
+package com.example.test.common;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,26 +10,22 @@ public class XML2Product extends DefaultHandler
 	private List<Product> products;
 	private Product product;
 	
-
 	private StringBuffer buffer = new StringBuffer();
 
-	public List<Product> getProducts()
-	{
+	public List<Product> getProducts() {
 		return products;
 	}
 
 	@Override
 	public void characters(char[] ch, int start, int length)
-			throws SAXException
-	{
+			throws SAXException {
 		buffer.append(ch, start, length);
 		super.characters(ch, start, length);
 	}
 
 	@Override
 	public void endElement(String uri, String localName, String qName)
-			throws SAXException
-	{
+			throws SAXException {
 		if (localName.equals("product")){
 			products.add(product);
 		}else if (localName.equals("id")){
@@ -46,19 +42,14 @@ public class XML2Product extends DefaultHandler
 	}
 	
 	@Override
-	public void startDocument() throws SAXException
-	{
+	public void startDocument() throws SAXException {
 		products = new ArrayList<Product>();
-
 	}
 
 	@Override
 	public void startElement(String uri, String localName, String qName,
-			Attributes attributes) throws SAXException
-	{
-
-		if (localName.equals("product"))
-		{
+			Attributes attributes) throws SAXException{
+		if (localName.equals("product")) {
 			product = new Product();
 		}
 		super.startElement(uri, localName, qName, attributes);
