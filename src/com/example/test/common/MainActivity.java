@@ -49,9 +49,16 @@ public class MainActivity extends Activity  implements OnClickListener{
 	private static final int SYSTEM_UI_LAYOUT_FLAGS  = GET_APP_NAME + 16;
 	private static final int SYSTEM_UI_FLAG_HIDE_NAVIGATION  = GET_APP_NAME + 17;
 	private static final int SYSTEM_UI_FLAG_LOW_PROFILE  = GET_APP_NAME + 18;
-	
+	private static final int CALL_JNI  = GET_APP_NAME + 19;	
 	
 	private View mRLayout;  
+	
+    public native String  stringFromJNI();
+    
+    static {
+        System.loadLibrary("TestNDK");
+    }
+    
 	@Override
 	public void onCreate(Bundle savedInstanceState){
 		super.onCreate(savedInstanceState);
@@ -79,7 +86,7 @@ public class MainActivity extends Activity  implements OnClickListener{
 		addButtion(myLayout, SYSTEM_UI_LAYOUT_FLAGS, "SYSTEM_UI_LAYOUT_FLAGS");
 		addButtion(myLayout, SYSTEM_UI_FLAG_HIDE_NAVIGATION, "SYSTEM_UI_FLAG_HIDE_NAVIGATION");
 		addButtion(myLayout, SYSTEM_UI_FLAG_LOW_PROFILE, "SYSTEM_UI_FLAG_LOW_PROFILE");
-		
+		addButtion(myLayout, CALL_JNI, "call jni");
 		mRLayout = getWindow().getDecorView();
 		setContentView(myScrollView);
 	}
@@ -152,6 +159,10 @@ public class MainActivity extends Activity  implements OnClickListener{
 				break;
 			case SYSTEM_UI_FLAG_LOW_PROFILE:
 				mRLayout.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LOW_PROFILE);  
+				break;
+			case CALL_JNI:
+				String result = stringFromJNI();
+				Util.showResultDialog(this, result, "Result :");
 				break;
 		}
 	}

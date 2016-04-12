@@ -148,14 +148,6 @@
     </PreferenceScreen>
 
     <PreferenceScreen
-        android:title="XML to Object">
-        <intent
-            android:action="android.intent.action.XML"
-            android:targetPackage="com.example.test"
-            android:targetClass="com.example.test.xml.XmlActivity" />
-    </PreferenceScreen>
-    
-    <PreferenceScreen
         android:title="System camera">
         <intent
             android:action="android.intent.action.SYSTEMCAMERA"
@@ -236,15 +228,7 @@
             android:targetPackage="com.example.test"
             android:targetClass="com.example.test.bitmap.MainActivity" />
     </PreferenceScreen>
-    
-	<PreferenceScreen
-        android:title="Call JNI">
-        <intent
-            android:action="android.intent.action.NDK"
-            android:targetPackage="com.example.test"
-            android:targetClass="com.example.test.ndk.MyJni" />
-    </PreferenceScreen>
-    
+
 	<PreferenceScreen
         android:title="Location">
         <intent

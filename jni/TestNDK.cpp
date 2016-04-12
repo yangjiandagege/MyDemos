@@ -11,7 +11,7 @@ extern "C" {
 
 static char s_string[] = "My god, I did it!";
 
-jstring Java_com_example_test_ndk_MyJni_stringFromJNI( JNIEnv* env, jobject obj )
+jstring Java_com_example_test_common_MainActivity_stringFromJNI( JNIEnv* env, jobject obj )
 {
        LOGI("YangJian MyJNI is called!");
        return env->NewStringUTF(s_string);
