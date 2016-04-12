@@ -8,18 +8,12 @@ import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.StreamCorruptedException;
-import java.util.HashMap;
 import java.util.List;
-
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.Bundle;
-import android.preference.Preference;
-import android.preference.Preference.OnPreferenceClickListener;
-import android.preference.PreferenceActivity;
 import android.util.Log;
 import android.util.Xml;
 import android.view.LayoutInflater;
@@ -29,8 +23,8 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.Toast;
-
 import com.example.test.R;
 import com.example.test.Util;
 import com.example.test.utils.*;
@@ -47,12 +41,25 @@ public class MainActivity extends Activity  implements OnClickListener{
 	private static final int DIALOG_5  = GET_APP_NAME + 8;
 	private static final int DIALOG_6  = GET_APP_NAME + 9;
 	private static final int XML_TO_PRODUCT  = GET_APP_NAME + 10;
+	private static final int SYSTEM_UI_FLAG_VISIBLE  = GET_APP_NAME + 11;
+	private static final int INVISIBLE  = GET_APP_NAME + 12;
+	private static final int SYSTEM_UI_FLAG_FULLSCREEN  = GET_APP_NAME + 13;
+	private static final int SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN  = GET_APP_NAME + 14;
+	private static final int SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION  = GET_APP_NAME + 15;
+	private static final int SYSTEM_UI_LAYOUT_FLAGS  = GET_APP_NAME + 16;
+	private static final int SYSTEM_UI_FLAG_HIDE_NAVIGATION  = GET_APP_NAME + 17;
+	private static final int SYSTEM_UI_FLAG_LOW_PROFILE  = GET_APP_NAME + 18;
 	
+	
+	private View mRLayout;  
 	@Override
 	public void onCreate(Bundle savedInstanceState){
 		super.onCreate(savedInstanceState);
+		final ScrollView myScrollView = new ScrollView(this);
 		final LinearLayout myLayout = new LinearLayout(this);  
+		
 		myLayout.setOrientation(LinearLayout.VERTICAL);
+		myScrollView.addView(myLayout);
 		addButtion(myLayout, GET_APP_NAME, "getAppName");
 		addButtion(myLayout, GET_APP_VERSION_NAME, "getAppVersionName");
 		addButtion(myLayout, SERIALLIZABLE, "serializable");
@@ -64,7 +71,17 @@ public class MainActivity extends Activity  implements OnClickListener{
 		addButtion(myLayout, DIALOG_5, "dialog5");
 		addButtion(myLayout, DIALOG_6, "dialog6");
 		addButtion(myLayout, XML_TO_PRODUCT, "xml to product");
-		setContentView(myLayout);
+		addButtion(myLayout, SYSTEM_UI_FLAG_VISIBLE, "SYSTEM_UI_FLAG_VISIBLE");
+		addButtion(myLayout, INVISIBLE, "INVISIBLE");
+		addButtion(myLayout, SYSTEM_UI_FLAG_FULLSCREEN, "SYSTEM_UI_FLAG_FULLSCREEN");
+		addButtion(myLayout, SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN, "SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN");
+		addButtion(myLayout, SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION, "SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION");
+		addButtion(myLayout, SYSTEM_UI_LAYOUT_FLAGS, "SYSTEM_UI_LAYOUT_FLAGS");
+		addButtion(myLayout, SYSTEM_UI_FLAG_HIDE_NAVIGATION, "SYSTEM_UI_FLAG_HIDE_NAVIGATION");
+		addButtion(myLayout, SYSTEM_UI_FLAG_LOW_PROFILE, "SYSTEM_UI_FLAG_LOW_PROFILE");
+		
+		mRLayout = getWindow().getDecorView();
+		setContentView(myScrollView);
 	}
 	
 	private void addButtion(LinearLayout layout, int id, String msg){
@@ -111,6 +128,30 @@ public class MainActivity extends Activity  implements OnClickListener{
 				break;
 			case XML_TO_PRODUCT:
 				xmlToObject();
+				break;
+			case SYSTEM_UI_FLAG_VISIBLE:
+				mRLayout.setSystemUiVisibility(View.SYSTEM_UI_FLAG_VISIBLE);      
+				break;
+			case INVISIBLE:
+				mRLayout.setSystemUiVisibility(View.INVISIBLE);  
+				break;
+			case SYSTEM_UI_FLAG_FULLSCREEN:
+				mRLayout.setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN);  
+				break;
+			case SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN:
+				mRLayout.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);  
+				break;
+			case SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION:
+				mRLayout.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION);  
+				break;
+			case SYSTEM_UI_LAYOUT_FLAGS:
+				mRLayout.setSystemUiVisibility(View.SYSTEM_UI_LAYOUT_FLAGS);  
+				break;
+			case SYSTEM_UI_FLAG_HIDE_NAVIGATION:
+				mRLayout.setSystemUiVisibility(View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);  
+				break;
+			case SYSTEM_UI_FLAG_LOW_PROFILE:
+				mRLayout.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LOW_PROFILE);  
 				break;
 		}
 	}
