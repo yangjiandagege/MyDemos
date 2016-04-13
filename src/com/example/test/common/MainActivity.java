@@ -26,7 +26,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.View.OnClickListener;
-import android.view.ViewGroup.LayoutParams;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -177,7 +176,6 @@ public class MainActivity extends Activity  implements OnClickListener{
 	
 	@Override
 	public void onClick(View view) {
-		Log.d("yangjian","view.getId() = "+view.getId());
 		mBtNameId[view.getId()].operate();
 	}
 	
@@ -410,7 +408,7 @@ public class MainActivity extends Activity  implements OnClickListener{
 	            public void onClick(DialogInterface dialog, int which) {  
 	                //dialog.dismiss();  
 	                Toast.makeText(MainActivity.this, items[which], Toast.LENGTH_SHORT).show();  
-	            }  
+	            }
 	        });  
 	        builder.setPositiveButton("确定",new DialogInterface.OnClickListener() {  
 	            @Override  

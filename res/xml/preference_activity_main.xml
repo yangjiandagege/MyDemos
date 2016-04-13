@@ -190,4 +190,22 @@
 	            android:targetClass="com.example.test.diyviews.slidingconflict.MainActivity" />
 	    </PreferenceScreen>
     </PreferenceScreen>
+    
+    <PreferenceScreen
+        android:title="BLE">
+	    <PreferenceScreen
+	        android:title="Central">
+	        <intent
+	            android:action="android.intent.action.BLECENTRAL"
+	            android:targetPackage="com.example.test"
+	            android:targetClass="com.example.test.ble.CentralActivity" />
+	    </PreferenceScreen>
+	    <PreferenceScreen
+	        android:title="Peripheral">
+	        <intent
+	            android:action="android.intent.action.BLEPERIPHERAL"
+	            android:targetPackage="com.example.test"
+	            android:targetClass="com.example.test.ble.PeripheralActivity" />
+	    </PreferenceScreen>
+    </PreferenceScreen>
 </PreferenceScreen>
