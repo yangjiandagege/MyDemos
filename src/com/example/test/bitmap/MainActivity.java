@@ -69,6 +69,7 @@ public class MainActivity extends Activity {
         mBmpUtil = new BitmapUtil(mContext);
         int earthId = getResources().getIdentifier("earth", "drawable", this.getPackageName());
         mImgSrc.setImageResource(earthId);
+        mBmp = BitmapFactory.decodeResource(getResources(), earthId);
     }
     
 
