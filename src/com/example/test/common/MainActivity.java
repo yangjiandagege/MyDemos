@@ -13,9 +13,15 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.util.Xml;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,12 +30,14 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
+import android.widget.TextView;
 import android.widget.Toast;
 import com.example.test.R;
 import com.example.test.Util;
 import com.example.test.utils.*;
 
 public class MainActivity extends Activity  implements OnClickListener{
+	
 	private static final int GET_APP_NAME  = 1000;
 	private static final int GET_APP_VERSION_NAME  = GET_APP_NAME + 1;
 	private static final int SERIALLIZABLE  = GET_APP_NAME + 2;
@@ -50,7 +58,12 @@ public class MainActivity extends Activity  implements OnClickListener{
 	private static final int SYSTEM_UI_FLAG_HIDE_NAVIGATION  = GET_APP_NAME + 17;
 	private static final int SYSTEM_UI_FLAG_LOW_PROFILE  = GET_APP_NAME + 18;
 	private static final int CALL_JNI  = GET_APP_NAME + 19;	
-	
+	private static final int SCREEN_INFO  = GET_APP_NAME + 20;
+	private static final int DATABASE_INSERT = GET_APP_NAME + 21;
+	private static final int DATABASE_UPDATE = GET_APP_NAME + 22;
+	private static final int DATABASE_SHOW = GET_APP_NAME + 23;
+	private static final int SHARED_PREFERENCES_WRITE = GET_APP_NAME + 24;
+	private static final int SHARED_PREFERENCES_READ = GET_APP_NAME + 25;
 	private View mRLayout;  
 	
     public native String  stringFromJNI();
@@ -67,34 +80,64 @@ public class MainActivity extends Activity  implements OnClickListener{
 		
 		myLayout.setOrientation(LinearLayout.VERTICAL);
 		myScrollView.addView(myLayout);
-		addButtion(myLayout, GET_APP_NAME, "getAppName");
-		addButtion(myLayout, GET_APP_VERSION_NAME, "getAppVersionName");
-		addButtion(myLayout, SERIALLIZABLE, "serializable");
-		addButtion(myLayout, UNSERIALLIZABLE, "unserializable");
-		addButtion(myLayout, DIALOG_1, "dialog1");
-		addButtion(myLayout, DIALOG_2, "dialog2");
-		addButtion(myLayout, DIALOG_3, "dialog3");
-		addButtion(myLayout, DIALOG_4, "dialog4");
-		addButtion(myLayout, DIALOG_5, "dialog5");
-		addButtion(myLayout, DIALOG_6, "dialog6");
-		addButtion(myLayout, XML_TO_PRODUCT, "xml to product");
-		addButtion(myLayout, SYSTEM_UI_FLAG_VISIBLE, "SYSTEM_UI_FLAG_VISIBLE");
-		addButtion(myLayout, INVISIBLE, "INVISIBLE");
-		addButtion(myLayout, SYSTEM_UI_FLAG_FULLSCREEN, "SYSTEM_UI_FLAG_FULLSCREEN");
-		addButtion(myLayout, SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN, "SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN");
-		addButtion(myLayout, SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION, "SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION");
-		addButtion(myLayout, SYSTEM_UI_LAYOUT_FLAGS, "SYSTEM_UI_LAYOUT_FLAGS");
-		addButtion(myLayout, SYSTEM_UI_FLAG_HIDE_NAVIGATION, "SYSTEM_UI_FLAG_HIDE_NAVIGATION");
-		addButtion(myLayout, SYSTEM_UI_FLAG_LOW_PROFILE, "SYSTEM_UI_FLAG_LOW_PROFILE");
-		addButtion(myLayout, CALL_JNI, "call jni");
+		addButton(myLayout, GET_APP_NAME, "getAppName", Color.RED);
+		addButton(myLayout, GET_APP_VERSION_NAME, "getAppVersionName", Color.RED);
+		addButton(myLayout, SERIALLIZABLE, "serializable", Color.BLUE);
+		addButton(myLayout, UNSERIALLIZABLE, "unserializable", Color.BLUE);
+		addButton(myLayout, DIALOG_1, "dialog1", Color.GREEN);
+		addButton(myLayout, DIALOG_2, "dialog2", Color.GREEN);
+		addButton(myLayout, DIALOG_3, "dialog3", Color.GREEN);
+		addButton(myLayout, DIALOG_4, "dialog4", Color.GREEN);
+		addButton(myLayout, DIALOG_5, "dialog5", Color.GREEN);
+		addButton(myLayout, DIALOG_6, "dialog6", Color.GREEN);
+		addButton(myLayout, XML_TO_PRODUCT, "xml to product", Color.YELLOW);
+		addButton(myLayout, SYSTEM_UI_FLAG_VISIBLE, "SYSTEM_UI_FLAG_VISIBLE", Color.CYAN);
+		addButton(myLayout, INVISIBLE, "INVISIBLE",  Color.CYAN);
+		addButton(myLayout, SYSTEM_UI_FLAG_FULLSCREEN, "SYSTEM_UI_FLAG_FULLSCREEN",  Color.CYAN);
+		addButton(myLayout, SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN, "SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN",  Color.CYAN);
+		addButton(myLayout, SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION, "SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION",  Color.CYAN);
+		addButton(myLayout, SYSTEM_UI_LAYOUT_FLAGS, "SYSTEM_UI_LAYOUT_FLAGS",  Color.CYAN);
+		addButton(myLayout, SYSTEM_UI_FLAG_HIDE_NAVIGATION, "SYSTEM_UI_FLAG_HIDE_NAVIGATION",  Color.CYAN);
+		addButton(myLayout, SYSTEM_UI_FLAG_LOW_PROFILE, "SYSTEM_UI_FLAG_LOW_PROFILE",  Color.CYAN);
+		addButton(myLayout, CALL_JNI, "call jni",  Color.RED);
+		addButton(myLayout, SCREEN_INFO, "screen info", Color.BLUE);
+		addButton(myLayout, DATABASE_INSERT, "database insert", Color.GREEN);
+		addButton(myLayout, DATABASE_UPDATE, "database update", Color.GREEN);
+		addButton(myLayout, DATABASE_SHOW, "database show", Color.GREEN);
+		addButton(myLayout, SHARED_PREFERENCES_WRITE, "sharedPreferences write", Color.GRAY);
+		addButton(myLayout, SHARED_PREFERENCES_READ, "sharedPreferences read", Color.GRAY);
 		mRLayout = getWindow().getDecorView();
 		setContentView(myScrollView);
+		initDb();
 	}
 	
-	private void addButtion(LinearLayout layout, int id, String msg){
+	private void initDb(){
+		InputStream is = getResources().openRawResource(R.raw.apk_test);
+		FileOutputStream fos;
+		try {
+			fos = new FileOutputStream("/sdcard/apk_test.db");
+			byte[] buffer = new byte[8192];
+			int count = 0;
+			while ((count = is.read(buffer)) >= 0)
+			{
+				fos.write(buffer, 0, count);
+			}
+
+			fos.close();
+			is.close();
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	private void addButton(LinearLayout layout, int id, String msg, int color){
 		Button btn = new Button(this); 
 		btn.setText(msg);
 		btn.setId(id);
+		btn.setBackgroundColor(color);
+		//btn.setTextColor(color);
 		layout.addView(btn);
 		btn.setOnClickListener(this);
 	}
@@ -164,9 +207,103 @@ public class MainActivity extends Activity  implements OnClickListener{
 				String result = stringFromJNI();
 				Util.showResultDialog(this, result, "Result :");
 				break;
+			case SCREEN_INFO:
+				showScreenInfo();
+				break;
+			case DATABASE_INSERT:
+				insertDatabase();
+				break;
+			case DATABASE_UPDATE:
+				updateDatabase();
+				break;
+			case DATABASE_SHOW:
+				readDatabase();
+				break;
+			case SHARED_PREFERENCES_WRITE:
+				sharedPreferencesWrite();
+				break;
+			case SHARED_PREFERENCES_READ:
+				sharedPreferencesRead();
+				break;
 		}
 	}
+	
+	public void sharedPreferencesWrite() {		
+		SharedPreferences mySharedPreferences = getSharedPreferences("test",
+				Activity.MODE_PRIVATE);
+		SharedPreferences.Editor editor = mySharedPreferences.edit();
+		editor.putString("name", "yangjian");
+		editor.putString("habit", "basketball");
+		editor.commit();
+		Util.showResultDialog(this, "write ok", "sharedPreferencesWriteData");
+	}
 
+	public void sharedPreferencesRead() {
+		SharedPreferences sharedPreferences = getSharedPreferences("test",
+				Activity.MODE_PRIVATE);
+		String name = sharedPreferences.getString("name", "");
+		String habit = sharedPreferences.getString("habit", "");
+		Util.showResultDialog(this, "name is " + name + "\n" + "habit is " + habit, "sharedPreferencesReadData");
+	}
+	
+	public void readDatabase() {
+		SQLiteDatabase sqLiteDatabase = SQLiteDatabase.openOrCreateDatabase("/sdcard/apk_test.db", null);
+		Cursor cursor = sqLiteDatabase.rawQuery("select * from t_test",null);
+		String result = "";
+		while (cursor.moveToNext()){
+			result = result + cursor.getString(1) + '\n';
+		}
+		Util.showResultDialog(this,result , "readDatabase :");
+		cursor.close();
+		sqLiteDatabase.close();
+	}
+	
+	public void insertDatabase() {
+		SQLiteDatabase sqLiteDatabase = SQLiteDatabase.openOrCreateDatabase("/sdcard/apk_test.db", null);
+		String INSERT_DATA1 = "insert into t_test(id,name,memo) values('3','yangjian','Student')";
+		sqLiteDatabase.execSQL(INSERT_DATA1);
+		String INSERT_DATA2 = "insert into t_test(id,name,memo) values('4','xiyuan','Student')";
+		sqLiteDatabase.execSQL(INSERT_DATA2);
+		Util.showResultDialog(this,INSERT_DATA1+","+INSERT_DATA2 , "insertDatabase :");
+		sqLiteDatabase.close();
+	}
+	
+	public void updateDatabase() {
+		SQLiteDatabase sqLiteDatabase = SQLiteDatabase.openOrCreateDatabase("/sdcard/apk_test.db", null);
+		String UPDATE_DATA1="update t_test set name='yangmiemie' where name='yangjian'";
+		sqLiteDatabase.execSQL(UPDATE_DATA1);
+		String UPDATE_DATA2="update t_test set name='ximiaomiao' where name='xiyuan'";
+		sqLiteDatabase.execSQL(UPDATE_DATA2);
+		Util.showResultDialog(this,UPDATE_DATA1+","+UPDATE_DATA2 , "updateDatabase :");
+		sqLiteDatabase.close();
+	}
+	
+	public void showScreenInfo(){
+		DisplayMetrics dm = getResources().getDisplayMetrics();
+		float density = dm.density;
+		int densityDpi = dm.densityDpi;
+		int widthPixels=dm.widthPixels;  
+	    int heightPixels=dm.heightPixels; 
+	    float xdpi = dm.xdpi;
+	    float ydpi = dm.ydpi;
+	    
+		String info = "density : "+density+"\n";
+		info += "densityDpi : "+densityDpi+"\n";
+		info += "widthPixels : "+widthPixels+"\n";
+		info += "heightPixels : "+heightPixels+"\n";
+		info += "xdpi : "+xdpi+"\n";
+		info += "ydpi : "+ydpi+"\n";
+//		屏幕尺寸(英寸)
+//		屏幕分辨率(像素px)
+//		屏幕像素密度(dpi)
+        AlertDialog.Builder builder=new AlertDialog.Builder(this);
+        builder.setTitle("Screen info"); 
+        builder.setIcon(R.drawable.ic_launcher);
+        builder.setMessage(info); 
+        builder.setNeutralButton("忽略", null);  
+        builder.create().show();
+	}
+	
     void getAppName(){
     	Util.showResultDialog(this, AppUtils.getAppName(this), "App name :");
     }

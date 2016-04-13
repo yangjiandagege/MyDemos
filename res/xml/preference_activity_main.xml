@@ -16,25 +16,6 @@
             android:targetPackage="com.example.test"
             android:targetClass="com.example.test.aidl.ClientActivity" />
     </PreferenceScreen>
-        
-    <PreferenceScreen
-        android:title="File IO">
-        <PreferenceScreen
-            android:title="SharedPreferences">
-	        <intent
-	            android:action="android.intent.action.fileio.SHAREDPREFERENCES"
-	            android:targetPackage="com.example.test"
-	            android:targetClass="com.example.test.fileio.SharedPreferencesActivity" />
-        </PreferenceScreen>
-        
-        <PreferenceScreen
-            android:title="DataBase">
-	        <intent
-	            android:action="android.intent.action.fileio.DATABASE"
-	            android:targetPackage="com.example.test"
-	            android:targetClass="com.example.test.fileio.DataBaseActivity" />
-        </PreferenceScreen>
-    </PreferenceScreen>
     
     <PreferenceScreen
         android:title="AsyncTask">
