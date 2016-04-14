@@ -1,4 +1,4 @@
-package com.example.test.ble;
+package com.example.test.ble.peripheral;
 import java.io.UnsupportedEncodingException;
 import java.util.Timer;
 import java.util.TimerTask;

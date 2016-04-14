@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.example.test.ble;
+package com.example.test.ble.peripheral;
 
 import java.util.Arrays;
 

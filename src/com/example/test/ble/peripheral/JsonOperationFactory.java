@@ -1,6 +1,6 @@
-package com.example.test.ble;
+package com.example.test.ble.peripheral;
 
-import com.example.test.ble.jsonoperate.Activate;
+import com.example.test.ble.peripheral.jsonoperate.Activate;
 
 import android.content.Context;
 

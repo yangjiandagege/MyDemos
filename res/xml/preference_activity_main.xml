@@ -198,14 +198,14 @@
 	        <intent
 	            android:action="android.intent.action.BLECENTRAL"
 	            android:targetPackage="com.example.test"
-	            android:targetClass="com.example.test.ble.CentralActivity" />
+	            android:targetClass="com.example.test.ble.central.CentralActivity" />
 	    </PreferenceScreen>
 	    <PreferenceScreen
 	        android:title="Peripheral">
 	        <intent
 	            android:action="android.intent.action.BLEPERIPHERAL"
 	            android:targetPackage="com.example.test"
-	            android:targetClass="com.example.test.ble.PeripheralActivity" />
+	            android:targetClass="com.example.test.ble.peripheral.PeripheralActivity" />
 	    </PreferenceScreen>
     </PreferenceScreen>
 </PreferenceScreen>

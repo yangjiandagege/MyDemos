@@ -1,8 +1,10 @@
-package com.example.test.ble.jsonoperate;
+package com.example.test.ble.peripheral.jsonoperate;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-import com.example.test.ble.JsonOperation;
+
+import com.example.test.ble.peripheral.JsonOperation;
+
 import android.util.Log;
 
 public class Activate extends JsonOperation{

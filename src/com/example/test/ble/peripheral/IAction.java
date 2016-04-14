@@ -1,4 +1,4 @@
-package com.example.test.ble;
+package com.example.test.ble.peripheral;
 
 public interface IAction {
 	

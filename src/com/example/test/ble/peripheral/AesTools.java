@@ -1,4 +1,4 @@
-package com.example.test.ble;
+package com.example.test.ble.peripheral;
 import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 import javax.crypto.Cipher;
