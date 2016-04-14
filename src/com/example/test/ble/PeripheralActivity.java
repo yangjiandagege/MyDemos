@@ -26,10 +26,11 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.ParcelUuid;
 import android.util.Log;
+import android.widget.Toast;
 
 public class PeripheralActivity extends Activity{
 	private static final String TAG = "PeripheralActivity";
-	
+	private Context mContext;
 	private BluetoothManager mBluetoothManager; 
     private BluetoothGattServer  mGattServer; 
     private BluetoothAdapter mAdapter;
@@ -65,6 +66,7 @@ public class PeripheralActivity extends Activity{
 	public void onCreate(Bundle savedInstanceState){
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_peripheral);
+		mContext = this;
 		initDevice();
 		initStateMachine();
 	}
@@ -86,7 +88,7 @@ public class PeripheralActivity extends Activity{
 		    mAdapter.enable();	
 		}
 
-		//mAdapter.setName("702021120");
+		mAdapter.setName("yj");
 		
 		mLeAdvertiser = mAdapter.getBluetoothLeAdvertiser();
         if(mLeAdvertiser == null) {
@@ -135,7 +137,7 @@ public class PeripheralActivity extends Activity{
 	private class ReceivingReqAction implements IAction{
 		public boolean performAction(byte[] value) {
 			Log.d("yangjian","step 2 : Received a data chunk , data type is RECEIVING_REQUEST , size = "+value.length);//+"value = "+Utils.bytesToHexString(value)
-    		mReqJsonBytes = CharUtils.byteMerger(mReqJsonBytes, value);
+    		mReqJsonBytes = ByteUtils.byteMerger(mReqJsonBytes, value);
 			return true;
 		}
 	}
@@ -150,7 +152,7 @@ public class PeripheralActivity extends Activity{
 
         	try {
         		if(mReqJsonBytes.length <= 3000){
-        			recString = new String(AESUtils.getInstance().decrypt(mReqJsonBytes) ,"UTF-8");
+        			recString = new String(AesTools.getInstance().decrypt(mReqJsonBytes) ,"UTF-8");
                 	try {
     					reqJsonObject = new JSONObject(recString);
     				} catch (JSONException e) {
@@ -171,11 +173,11 @@ public class PeripheralActivity extends Activity{
         		rspJsonObject = jsonOper.jsonOperation(reqJsonObject);
 	            Log.d("yangjian","--step 4 : Get the response json , response Json = "+rspJsonObject);//"--step" means the info is very important
 	            
-				rspData = AESUtils.getInstance().encrypt(rspJsonObject.toString().getBytes("UTF8"));
-				Log.d("yangjian","step 5 : Encrypt the response json "+", rspData.length = "+rspData.length+" , rspData = "+CharUtils.bytesToHexString(rspData));
+				rspData = AesTools.getInstance().encrypt(rspJsonObject.toString().getBytes("UTF8"));
+				Log.d("yangjian","step 5 : Encrypt the response json "+", rspData.length = "+rspData.length+" , rspData = "+ByteUtils.bytesToHexString(rspData));
 	            
 	            mRspJsonBytes = null;
-	            mRspJsonBytes = CharUtils.bytesSplit(rspData,512);
+	            mRspJsonBytes = ByteUtils.bytesSplit(rspData,512);
 	            Log.d("yangjian","step 6 : Split the encrypted response data to many parts so that send to SC Client");
 	            
 	            mReadRspState = RESPONSE_STATE_READY;
@@ -326,14 +328,20 @@ public class PeripheralActivity extends Activity{
 		public void onStartFailure(int errorCode) {
 			super.onStartFailure(errorCode);
 			if(errorCode == ADVERTISE_FAILED_DATA_TOO_LARGE){
+				Toast.makeText(mContext, "ADVERTISE_FAILED_DATA_TOO_LARGE", Toast.LENGTH_LONG).show();
 			}else if(errorCode == ADVERTISE_FAILED_TOO_MANY_ADVERTISERS){
+				Toast.makeText(mContext, "ADVERTISE_FAILED_TOO_MANY_ADVERTISERS", Toast.LENGTH_LONG).show();
 			}else if(errorCode == ADVERTISE_FAILED_ALREADY_STARTED){
+				Toast.makeText(mContext, "ADVERTISE_FAILED_ALREADY_STARTED", Toast.LENGTH_LONG).show();
 			}else if(errorCode == ADVERTISE_FAILED_INTERNAL_ERROR){
+				Toast.makeText(mContext, "ADVERTISE_FAILED_INTERNAL_ERROR", Toast.LENGTH_LONG).show();
 			}else if(errorCode == ADVERTISE_FAILED_FEATURE_UNSUPPORTED){
+				Toast.makeText(mContext, "ADVERTISE_FAILED_FEATURE_UNSUPPORTED", Toast.LENGTH_LONG).show();
 			}
  	    }
         @Override
         public void onStartSuccess(AdvertiseSettings settingsInEffect) {
+        	Toast.makeText(mContext, "Start advertiser successfully", Toast.LENGTH_LONG).show();
             super.onStartSuccess(settingsInEffect);
         }
     }

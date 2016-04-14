@@ -6,16 +6,16 @@ import javax.crypto.NoSuchPaddingException;
 import javax.crypto.spec.SecretKeySpec;
 import android.util.Base64;
 
-public class AESUtils {
+public class AesTools {
 	private Cipher mCipher;
 	private SecretKeySpec mSkeySpecRequest;
 	private SecretKeySpec mSkeySpecResponse;
-	private static AESUtils mAESUtils_instace;
+	private static AesTools mAESUtils_instace;
     static byte[] REQUEST_PRESHARED_KEY = new byte[256];
     static byte[] RESPONSE_PRESHARED_KEY = new byte[256];
     String TAG = "BleStation";
     
-	AESUtils(){
+	AesTools(){
 		try {
 			REQUEST_PRESHARED_KEY = Base64.decode("pwf0jsWh6cZdPvLypYSrqXN307T2CLgIZ/VtwBmo8WI=", Base64.DEFAULT);
 			RESPONSE_PRESHARED_KEY = Base64.decode("LFxaPOBvx1uVu4AMeM2F4URJEwFryzjEeWk6QDN4BHg=", Base64.DEFAULT);
@@ -29,11 +29,11 @@ public class AESUtils {
 		}
 	}
 	
-    public static AESUtils getInstance()
+    public static AesTools getInstance()
     {
     	if( mAESUtils_instace == null)
     	{
-    		mAESUtils_instace = new AESUtils();
+    		mAESUtils_instace = new AesTools();
     	}
     	return mAESUtils_instace;
     }
@@ -41,7 +41,7 @@ public class AESUtils {
 	public byte[] encrypt(byte[] data) throws Exception {
 		mCipher.init(Cipher.ENCRYPT_MODE, mSkeySpecResponse);
 		byte[] encrypted = mCipher.doFinal(data);
-		return CharUtils.byteMerger(mCipher.getIV(), encrypted);
+		return ByteUtils.byteMerger(mCipher.getIV(), encrypted);
 	}
 	
 	public byte[] decrypt(byte[] encrypted) throws Exception {

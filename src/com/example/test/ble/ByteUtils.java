@@ -18,7 +18,7 @@ package com.example.test.ble;
 
 import java.util.Arrays;
 
-public class CharUtils {
+public class ByteUtils {
     
 	public static boolean isNumeric(String str) {
 		for (int i = str.length(); --i >= 0;) {
