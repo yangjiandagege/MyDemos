@@ -63,6 +63,7 @@ public class PeripheralActivity extends Activity{
     
 	@Override
 	public void onCreate(Bundle savedInstanceState){
+		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_peripheral);
 		initDevice();
 		initStateMachine();
@@ -85,7 +86,7 @@ public class PeripheralActivity extends Activity{
 		    mAdapter.enable();	
 		}
 
-		mAdapter.setName("702021120");
+		//mAdapter.setName("702021120");
 		
 		mLeAdvertiser = mAdapter.getBluetoothLeAdvertiser();
         if(mLeAdvertiser == null) {
@@ -167,7 +168,7 @@ public class PeripheralActivity extends Activity{
         			Log.d("yangjian","--step 3 : Received all of the data , IsRequestTooLong ");//"--step" means the info is very important
         			jsonOper = JsonOperationFactory.createJsonOperation("IsRequestTooLong",null);
         		}
-        		jsonOper.jsonOperation(reqJsonObject);
+        		rspJsonObject = jsonOper.jsonOperation(reqJsonObject);
 	            Log.d("yangjian","--step 4 : Get the response json , response Json = "+rspJsonObject);//"--step" means the info is very important
 	            
 				rspData = AESUtils.getInstance().encrypt(rspJsonObject.toString().getBytes("UTF8"));
@@ -361,7 +362,6 @@ public class PeripheralActivity extends Activity{
             RequestResponseService.addCharacteristic(mNotifyRspStartChar);
             RequestResponseService.addCharacteristic(mWriteRspIncrementChar);
             mGattServer.addService(RequestResponseService);
-            
             mLeAdvertiser.startAdvertising(buildAdvertiseSettings(), buildAdvertiseData(),mAdvertiseCallback);
         } 
     }
