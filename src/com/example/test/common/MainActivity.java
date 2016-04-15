@@ -12,13 +12,19 @@ import java.util.List;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore.Audio;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.util.Xml;
@@ -29,6 +35,7 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.RemoteViews;
 import android.widget.ScrollView;
 import android.widget.Toast;
 import com.example.test.R;
@@ -37,8 +44,15 @@ import com.example.test.utils.*;
 
 public class MainActivity extends Activity  implements OnClickListener{
 	BtNameId mBtNameId[] = new BtNameId[50];
+    private NotificationManager nm;
 	private View mRLayout;  
 	
+    private int Notification_ID_BASE = 110;
+    private Notification baseNF;
+    private int Notification_ID_MEDIA = 119;
+    private Notification mediaNF;
+    private PendingIntent pd;
+    
     public native String  stringFromJNI();
     
     static {
@@ -51,6 +65,9 @@ public class MainActivity extends Activity  implements OnClickListener{
 		initUi(MainActivity.this);
 		initDb();
 		mRLayout = getWindow().getDecorView();
+        nm = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+        Intent intent = new Intent(this,MainActivity.class);
+        pd = PendingIntent.getActivity(MainActivity.this, 0, intent, 0);
 	}
 	
 	private void initUi(Context context){
@@ -85,6 +102,13 @@ public class MainActivity extends Activity  implements OnClickListener{
 		mBtNameId[++i] = new BtNameId("database show", i, Color.GREEN, new readDatabase());
 		mBtNameId[++i] = new BtNameId("sharedPreferences write", i, Color.GRAY, new sharedPreferencesWrite());
 		mBtNameId[++i] = new BtNameId("sharedPreferences read", i, Color.GRAY, new sharedPreferencesRead());
+		mBtNameId[++i] = new BtNameId("BaseNotification", i, Color.DKGRAY, new BaseNotification());
+		mBtNameId[++i] = new BtNameId("UpdateBaseNotification", i, Color.DKGRAY, new UpdateBaseNotification());
+		mBtNameId[++i] = new BtNameId("ClearBaseNotification", i, Color.DKGRAY, new ClearBaseNotification());
+		mBtNameId[++i] = new BtNameId("MediaNotification", i, Color.DKGRAY, new MediaNotification());
+		mBtNameId[++i] = new BtNameId("ClearMediaNotification", i, Color.DKGRAY, new ClearMediaNotification());
+		mBtNameId[++i] = new BtNameId("CustomNotification", i, Color.DKGRAY, new CustomNotification());
+		mBtNameId[++i] = new BtNameId("ClearAll", i, Color.DKGRAY, new ClearAllNotification());
 		mBtNameId[++i] = new BtNameId("end", i, Color.BLACK, null);
 		for(int j = 0; mBtNameId != null ; j++){
 			addButton(myLayout,mBtNameId[j].getId(),mBtNameId[j].getName(),mBtNameId[j].getColor());
@@ -95,10 +119,117 @@ public class MainActivity extends Activity  implements OnClickListener{
 		setContentView(myScrollView);
 	}
 	
+	public class BaseNotification implements Operation{
+		@Override
+		public void operate() {
+            //新建状态栏通知
+            baseNF = new Notification();
+            //设置通知在状态栏显示的图标
+            baseNF.icon = R.drawable.icon;
+            //通知时在状态栏显示的内容
+            baseNF.tickerText = "You clicked BaseNF!";
+            //通知的默认参数 DEFAULT_SOUND, DEFAULT_VIBRATE, DEFAULT_LIGHTS.
+            //如果要全部采用默认值, 用 DEFAULT_ALL.
+            //此处采用默认声音
+            baseNF.defaults |= Notification.DEFAULT_SOUND;
+            baseNF.defaults |= Notification.DEFAULT_VIBRATE;
+            baseNF.defaults |= Notification.DEFAULT_LIGHTS;
+            //让声音、振动无限循环，直到用户响应
+            baseNF.flags |= Notification.FLAG_INSISTENT;
+            //通知被点击后，自动消失
+            baseNF.flags |= Notification.FLAG_AUTO_CANCEL;
+            //点击'Clear'时，不清楚该通知(QQ的通知无法清除，就是用的这个)
+            baseNF.flags |= Notification.FLAG_NO_CLEAR;
+
+            //第二个参数 ：下拉状态栏时显示的消息标题 expanded message title
+            //第三个参数：下拉状态栏时显示的消息内容 expanded message text
+            //第四个参数：点击该通知时执行页面跳转
+            baseNF.setLatestEventInfo(MainActivity.this, "Title01", "Content01", pd);
+
+            //发出状态栏通知
+            //The first parameter is the unique ID for the Notification
+            // and the second is the Notification object.
+            nm.notify(Notification_ID_BASE, baseNF);
+		}
+	}
+	
+	public class UpdateBaseNotification implements Operation{
+		@Override
+		public void operate() {
+            //更新通知
+            //比如状态栏提示有一条新短信，还没来得及查看，又来一条新短信的提示。
+            //此时采用更新原来通知的方式比较。
+            //(再重新发一个通知也可以，但是这样会造成通知的混乱，而且显示多个通知给用户，对用户也不友好)
+            baseNF.setLatestEventInfo(MainActivity.this, "Title02", "Content02", pd);
+            nm.notify(Notification_ID_BASE, baseNF);
+		}
+	}
+	
+	public class ClearBaseNotification implements Operation{
+		@Override
+		public void operate() {
+            //清除 baseNF
+            nm.cancel(Notification_ID_BASE);
+		}
+	}
+	
+	public class MediaNotification implements Operation{
+		@Override
+		public void operate() {
+            mediaNF = new Notification();
+            mediaNF.icon = R.drawable.icon;
+            mediaNF.tickerText = "You clicked MediaNF!";
+
+            //自定义声音
+            mediaNF.sound = Uri.withAppendedPath(Audio.Media.INTERNAL_CONTENT_URI, "6");
+            //通知时发出的振动
+            //第一个参数: 振动前等待的时间
+            //第二个参数： 第一次振动的时长、以此类推
+            long[] vir = {0,100,200,300};
+            mediaNF.vibrate = vir;
+            mediaNF.setLatestEventInfo(MainActivity.this, "Title03", "Content03", pd);
+            nm.notify(Notification_ID_MEDIA, mediaNF);
+		}
+	}
+	
+	public class ClearMediaNotification implements Operation{
+		@Override
+		public void operate() {
+            //清除 mediaNF
+            nm.cancel(Notification_ID_MEDIA);
+		}
+	}
+	
 	public class systemUiFlagVisible implements Operation{
 		@Override
 		public void operate() {
 			mRLayout.setSystemUiVisibility(View.SYSTEM_UI_FLAG_VISIBLE);
+		}
+	}
+	
+	public class CustomNotification implements Operation{
+		@Override
+		public void operate() {
+            //自定义下拉视图，比如下载软件时，显示的进度条。
+            Notification notification = new Notification();
+            notification.icon = R.drawable.icon;
+            notification.tickerText = "Custom!";
+            RemoteViews contentView = new RemoteViews(getPackageName(), R.xml.notification_custom);
+            contentView.setImageViewResource(R.id.image, R.drawable.icon);
+            contentView.setTextViewText(R.id.text, "Hello, this message is in a custom expanded view");
+            notification.contentView = contentView;
+
+            //使用自定义下拉视图时，不需要再调用setLatestEventInfo()方法
+            //但是必须定义 contentIntent
+            notification.contentIntent = pd;
+            nm.notify(3, notification);
+		}
+	}
+	
+	public class ClearAllNotification implements Operation{
+		@Override
+		public void operate() {
+            nm.cancelAll();
 		}
 	}
 	
@@ -313,7 +444,7 @@ public class MainActivity extends Activity  implements OnClickListener{
 			}
 		}
 	}
-    
+
 	public class unserializable implements Operation{
 		@Override
 		public void operate() {

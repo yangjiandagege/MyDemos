@@ -123,14 +123,6 @@
             android:targetClass="com.example.test.location.LocationActivity" />
     </PreferenceScreen>
     
-	<PreferenceScreen
-        android:title="Notification">
-        <intent
-            android:action="android.intent.action.NOTIFICATION"
-            android:targetPackage="com.example.test"
-            android:targetClass="com.example.test.notification.NotificationActivity" />
-    </PreferenceScreen>
-    
     <PreferenceScreen
         android:title="ContentObserver">
         <intent
