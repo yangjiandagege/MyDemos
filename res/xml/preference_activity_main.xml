@@ -140,7 +140,7 @@
     </PreferenceScreen>
     
     
-        <PreferenceScreen
+    <PreferenceScreen
         android:title="QQ Auth">
         <intent
             android:action="android.intent.action.QQAUTH"

@@ -73,15 +73,15 @@ public class PeripheralActivity extends Activity{
 	
 	void initDevice() {
 		if (!getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)) {
-            Log.e(TAG, "BLE is not supported");
+            Toast.makeText(mContext, "BLE is not supported", Toast.LENGTH_LONG).show();
         }
 		
 		mBluetoothManager = (BluetoothManager)getSystemService(Context.BLUETOOTH_SERVICE);
 		mAdapter = mBluetoothManager.getAdapter();
 		if (mAdapter == null) {
-			Log.e(TAG, "Bluetooth is not supported.");
+			Toast.makeText(mContext, "Bluetooth is not supported.", Toast.LENGTH_LONG).show();
 		} else {
-			Log.e(TAG, "Bluetooth is supported.");
+			Log.v(TAG, "Bluetooth is supported.");
 		}
 		
 		if(!mAdapter.isEnabled()) {
@@ -92,7 +92,7 @@ public class PeripheralActivity extends Activity{
 		
 		mLeAdvertiser = mAdapter.getBluetoothLeAdvertiser();
         if(mLeAdvertiser == null) {
-        	Log.e(TAG,"The device not support peripheral");
+        	Toast.makeText(mContext, "The device can not play as  peripheral device", Toast.LENGTH_LONG).show();
         }
         
         mAdvertiseCallback = new TestAdvertiseCallback();
@@ -223,11 +223,13 @@ public class PeripheralActivity extends Activity{
         @Override
         public void onConnectionStateChange(BluetoothDevice device, int status, int newState){
             super.onConnectionStateChange(device, status, newState);
+            Toast.makeText(mContext, "onConnectionStateChange", Toast.LENGTH_LONG).show();
         }
 
         @Override
         public void onServiceAdded(int status, BluetoothGattService service) {
             super.onServiceAdded(status, service);
+            Toast.makeText(mContext, "onServiceAdded", Toast.LENGTH_LONG).show();
         }
 
         @Override

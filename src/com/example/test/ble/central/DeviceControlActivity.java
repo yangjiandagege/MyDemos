@@ -260,8 +260,9 @@ public class DeviceControlActivity extends Activity {
         for (BluetoothGattService gattService : gattServices) {
             HashMap<String, String> currentServiceData = new HashMap<String, String>();
             uuid = gattService.getUuid().toString();
+            Log.d("yangjian", "gattService = "+gattService.getUuid().toString());
             currentServiceData.put(
-                    LIST_NAME, SampleGattAttributes.lookup(uuid, unknownServiceString));
+                    LIST_NAME, TestGattAttributes.lookup(uuid, unknownServiceString));
             currentServiceData.put(LIST_UUID, uuid);
             gattServiceData.add(currentServiceData);
 
@@ -274,11 +275,12 @@ public class DeviceControlActivity extends Activity {
 
             // Loops through available Characteristics.
             for (BluetoothGattCharacteristic gattCharacteristic : gattCharacteristics) {
+            	Log.d("yangjian", "gattCharacteristic = "+gattCharacteristic.getUuid().toString());
                 charas.add(gattCharacteristic);
                 HashMap<String, String> currentCharaData = new HashMap<String, String>();
                 uuid = gattCharacteristic.getUuid().toString();
                 currentCharaData.put(
-                        LIST_NAME, SampleGattAttributes.lookup(uuid, unknownCharaString));
+                        LIST_NAME, TestGattAttributes.lookup(uuid, unknownCharaString));
                 currentCharaData.put(LIST_UUID, uuid);
                 gattCharacteristicGroupData.add(currentCharaData);
             }

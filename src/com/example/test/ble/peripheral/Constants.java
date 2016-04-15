@@ -2,13 +2,13 @@ package com.example.test.ble.peripheral;
 
 public class Constants {
 	/********BLE UUIDs*******************/
-	public static final String SERVICE_UUID = "922D84D0-1AB3-4A6C-BD7A-FB00780A3DEE";
-	public static final String REQUEST_DATA = "89DAFB6E-BB39-4AAD-A7A3-78CD1D050470";
-	public static final String REQUEST_START = "424C164E-2589-4E81-867E-FF8EB4BC85F4";
-	public static final String REQUEST_END = "5FC614F4-3429-4814-8A05-52B1A515AE5B";
-	public static final String RESPONSE_DATA = "C3D2CDCF-FC9D-4E99-9D18-0CC98C61B557";
-	public static final String RESPONSE_START = "6AC603F8-E0F5-4907-B5CE-61496BD819B4";
-	public static final String RESPONSE_INCREMENT = "827F70E3-188D-4565-9930-B3EB98AB5506";
+	public static final String SERVICE_UUID = "922d84d0-1ab3-4a6c-bd7a-fb00780a3dee";
+	public static final String REQUEST_DATA = "89dafb6e-bb39-4aad-a7a3-78cd1d050470";
+	public static final String REQUEST_START = "424c164e-2589-4e81-867e-ff8eb4bc85f4";
+	public static final String REQUEST_END = "5fc614f4-3429-4814-8a05-52b1a515ae5b";
+	public static final String RESPONSE_DATA = "c3d2cdcf-fc9d-4e99-9d18-0cc98c61b557";
+	public static final String RESPONSE_START = "6ac603f8-e0f5-4907-b5ce-61496bd819b4";
+	public static final String RESPONSE_INCREMENT = "827f70e3-188d-4565-9930-b3eb98ab5506";
 	
 	/********BLE event*******************/
 	public static final int BLE_EVT_BEGIN = 0;
