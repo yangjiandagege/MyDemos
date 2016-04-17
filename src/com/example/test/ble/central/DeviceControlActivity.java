@@ -31,15 +31,30 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ExpandableListView;
+import android.widget.ListView;
 import android.widget.SimpleExpandableListAdapter;
 import android.widget.TextView;
 
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import com.example.test.R;
+import com.example.test.ble.AesTools;
+import com.example.test.ble.BleConstants;
+import com.example.test.ble.BleMsgCtrol;
+import com.example.test.ble.ByteUtils;
+import com.example.test.ble.Msg;
+import com.example.test.ble.MsgAdapter;
+import com.example.test.chatting.ChattingActivity;
 
 /**
  * For a given BLE device, this Activity provides the user interface to connect, display data,
@@ -53,6 +68,12 @@ public class DeviceControlActivity extends Activity {
     public static final String EXTRAS_DEVICE_NAME = "DEVICE_NAME";
     public static final String EXTRAS_DEVICE_ADDRESS = "DEVICE_ADDRESS";
 
+	private ListView msgListView;
+	private EditText msgEditText;
+	private Button btnSend;
+	private MsgAdapter adapter;
+	private List<Msg> msgList = new ArrayList<Msg>();
+    
     private TextView mConnectionState;
     private TextView mDataField;
     private String mDeviceName;
@@ -63,10 +84,12 @@ public class DeviceControlActivity extends Activity {
             new ArrayList<ArrayList<BluetoothGattCharacteristic>>();
     private boolean mConnected = false;
     private BluetoothGattCharacteristic mNotifyCharacteristic;
+    private BleMsgCtrol mBleMsgCtrol = new BleMsgCtrol();
 
     private final String LIST_NAME = "NAME";
     private final String LIST_UUID = "UUID";
-
+    
+	private byte[][] mReqJsonBytes = null;
     // Code to manage Service lifecycle.
     private final ServiceConnection mServiceConnection = new ServiceConnection() {
 
@@ -87,12 +110,6 @@ public class DeviceControlActivity extends Activity {
         }
     };
 
-    // Handles various events fired by the Service.
-    // ACTION_GATT_CONNECTED: connected to a GATT server.
-    // ACTION_GATT_DISCONNECTED: disconnected from a GATT server.
-    // ACTION_GATT_SERVICES_DISCOVERED: discovered GATT services.
-    // ACTION_DATA_AVAILABLE: received data from the device.  This can be a result of read
-    //                        or notification operations.
     private final BroadcastReceiver mGattUpdateReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -149,15 +166,10 @@ public class DeviceControlActivity extends Activity {
                 }
     };
 
-    private void clearUI() {
-        mGattServicesList.setAdapter((SimpleExpandableListAdapter) null);
-        mDataField.setText(R.string.no_data);
-    }
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.xml.gatt_services_characteristics);
+        setContentView(R.layout.activity_gatt_services_characteristics);
 
         final Intent intent = getIntent();
         mDeviceName = intent.getStringExtra(EXTRAS_DEVICE_NAME);
@@ -199,6 +211,7 @@ public class DeviceControlActivity extends Activity {
         mBluetoothLeService = null;
     }
 
+    
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.gatt_services, menu);
@@ -226,6 +239,37 @@ public class DeviceControlActivity extends Activity {
                 return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+    
+    OnClickListener mOnSendClickListener = new OnClickListener() {
+		@Override
+		public void onClick(View v) {
+			String content = msgEditText.getText().toString();
+			if (!"".equals(content)) {
+				Msg msg = new Msg(content, Msg.TYPE_SENT);
+				msgList.add(msg);
+				adapter.notifyDataSetChanged();
+				msgListView.setSelection(msgList.size());
+				msgEditText.setText("");
+			    
+			    try {
+			    	byte[] bytes = AesTools.getInstance().encryptReq(content.getBytes("UTF8"));
+			    	Log.d("yangjian","all data : "+ByteUtils.bytesToHexString(bytes));
+					mBleMsgCtrol.mReqBytes = ByteUtils.bytesSplit(bytes, BleConstants.BLE_MAX_DATA_ONCE);
+					mBluetoothLeService.sendMsg(mBleMsgCtrol);
+					msgListView.setSelection(msgList.size());
+				} catch (UnsupportedEncodingException e) {
+					e.printStackTrace();
+				} catch (Exception e) {
+					e.printStackTrace();
+				};
+			}
+		}
+	};
+	
+    private void clearUI() {
+        mGattServicesList.setAdapter((SimpleExpandableListAdapter) null);
+        mDataField.setText(R.string.no_data);
     }
 
     private void updateConnectionState(final int resourceId) {
@@ -260,7 +304,16 @@ public class DeviceControlActivity extends Activity {
         for (BluetoothGattService gattService : gattServices) {
             HashMap<String, String> currentServiceData = new HashMap<String, String>();
             uuid = gattService.getUuid().toString();
-            Log.d("yangjian", "gattService = "+gattService.getUuid().toString());
+            if (uuid.equalsIgnoreCase(BleConstants.SERVICE_UUID)) {
+            	mBleMsgCtrol.mE3GattService = gattService;
+            	setContentView(R.layout.activity_chatting);
+                adapter = new MsgAdapter(DeviceControlActivity.this, R.xml.msg_item, msgList);
+                msgEditText = (EditText) findViewById(R.id.input_et);
+                btnSend = (Button) findViewById(R.id.send);
+                msgListView = (ListView) findViewById(R.id.msg_list);
+                msgListView.setAdapter(adapter);
+                btnSend.setOnClickListener(mOnSendClickListener);
+            }
             currentServiceData.put(
                     LIST_NAME, TestGattAttributes.lookup(uuid, unknownServiceString));
             currentServiceData.put(LIST_UUID, uuid);
@@ -275,10 +328,42 @@ public class DeviceControlActivity extends Activity {
 
             // Loops through available Characteristics.
             for (BluetoothGattCharacteristic gattCharacteristic : gattCharacteristics) {
-            	Log.d("yangjian", "gattCharacteristic = "+gattCharacteristic.getUuid().toString());
                 charas.add(gattCharacteristic);
                 HashMap<String, String> currentCharaData = new HashMap<String, String>();
                 uuid = gattCharacteristic.getUuid().toString();
+            	if (uuid.equalsIgnoreCase(BleConstants.REQUEST_DATA)) {
+            		Log.d("yangjian","["+Thread.currentThread().getStackTrace()[2].getFileName()+","+
+                	           Thread.currentThread().getStackTrace()[2].getMethodName()+","+
+                	           Thread.currentThread().getStackTrace()[2].getLineNumber()+"]"+gattCharacteristic.getPermissions());
+            		mBleMsgCtrol.mE3WriteReqDataChar = gattCharacteristic;
+            	} else if (uuid.equalsIgnoreCase(BleConstants.REQUEST_START)) {
+            		Log.d("yangjian","["+Thread.currentThread().getStackTrace()[2].getFileName()+","+
+                	           Thread.currentThread().getStackTrace()[2].getMethodName()+","+
+                	           Thread.currentThread().getStackTrace()[2].getLineNumber()+"]"+gattCharacteristic.getPermissions());
+            		mBleMsgCtrol.mE3WriteReqStartChar = gattCharacteristic;
+            	} else if (uuid.equalsIgnoreCase(BleConstants.REQUEST_END)) {
+            		Log.d("yangjian","["+Thread.currentThread().getStackTrace()[2].getFileName()+","+
+                	           Thread.currentThread().getStackTrace()[2].getMethodName()+","+
+                	           Thread.currentThread().getStackTrace()[2].getLineNumber()+"]"+gattCharacteristic.getPermissions());
+            		mBleMsgCtrol.mE3WriteReqEndChar = gattCharacteristic;
+            	} else if (uuid.equalsIgnoreCase(BleConstants.RESPONSE_DATA)) {
+            		mBleMsgCtrol.mE3ReadRspDataChar = gattCharacteristic;
+            		mBluetoothLeService.setCharacteristicNotification(mBleMsgCtrol.mE3ReadRspDataChar, true);
+            		Log.d("yangjian","["+Thread.currentThread().getStackTrace()[2].getFileName()+","+
+               	           Thread.currentThread().getStackTrace()[2].getMethodName()+","+
+               	           Thread.currentThread().getStackTrace()[2].getLineNumber()+"]"+gattCharacteristic.getPermissions());
+            	} else if (uuid.equalsIgnoreCase(BleConstants.RESPONSE_START)) {
+            		Log.d("yangjian","["+Thread.currentThread().getStackTrace()[2].getFileName()+","+
+                	           Thread.currentThread().getStackTrace()[2].getMethodName()+","+
+                	           Thread.currentThread().getStackTrace()[2].getLineNumber()+"]"+gattCharacteristic.getPermissions());
+            		mBleMsgCtrol.mE3NotifyRspStartChar = gattCharacteristic;
+            		mBluetoothLeService.setCharacteristicNotification(mBleMsgCtrol.mE3NotifyRspStartChar, true);
+            	} else if (uuid.equalsIgnoreCase(BleConstants.RESPONSE_INCREMENT)) {
+            		Log.d("yangjian","["+Thread.currentThread().getStackTrace()[2].getFileName()+","+
+                	           Thread.currentThread().getStackTrace()[2].getMethodName()+","+
+                	           Thread.currentThread().getStackTrace()[2].getLineNumber()+"]"+gattCharacteristic.getPermissions());
+            		mBleMsgCtrol.mE3WriteRspIncrementChar = gattCharacteristic;
+            	} 
                 currentCharaData.put(
                         LIST_NAME, TestGattAttributes.lookup(uuid, unknownCharaString));
                 currentCharaData.put(LIST_UUID, uuid);

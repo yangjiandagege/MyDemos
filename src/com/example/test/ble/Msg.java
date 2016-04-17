@@ -1,4 +1,4 @@
-package com.example.test.chatting;
+package com.example.test.ble;
 public class Msg {
 	public static final int TYPE_RECEIVED = 0;
 	public static final int TYPE_SENT = 1;

@@ -1,4 +1,4 @@
-package com.example.test.ble.peripheral;
+package com.example.test.ble;
 import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 import javax.crypto.Cipher;
@@ -29,23 +29,34 @@ public class AesTools {
 		}
 	}
 	
-    public static AesTools getInstance()
-    {
-    	if( mAESUtils_instace == null)
-    	{
+    public static AesTools getInstance() {
+    	if( mAESUtils_instace == null) {
     		mAESUtils_instace = new AesTools();
     	}
     	return mAESUtils_instace;
     }
 	
-	public byte[] encrypt(byte[] data) throws Exception {
+	public byte[] encryptReq(byte[] data) throws Exception {
+		mCipher.init(Cipher.ENCRYPT_MODE, mSkeySpecRequest);
+		byte[] encrypted = mCipher.doFinal(data);
+		return ByteUtils.byteMerger(mCipher.getIV(), encrypted);
+	}
+	
+	public byte[] decryptReq(byte[] encrypted) throws Exception {
+		mCipher.init(Cipher.DECRYPT_MODE, mSkeySpecRequest);
+		byte[] decrypted = mCipher.doFinal(encrypted);
+		return Arrays.copyOfRange(decrypted, mCipher.getBlockSize(), encrypted.length-2);
+	}
+	
+	
+	public byte[] encryptRsp(byte[] data) throws Exception {
 		mCipher.init(Cipher.ENCRYPT_MODE, mSkeySpecResponse);
 		byte[] encrypted = mCipher.doFinal(data);
 		return ByteUtils.byteMerger(mCipher.getIV(), encrypted);
 	}
 	
-	public byte[] decrypt(byte[] encrypted) throws Exception {
-		mCipher.init(Cipher.DECRYPT_MODE, mSkeySpecRequest);
+	public byte[] decryptRsp(byte[] encrypted) throws Exception {
+		mCipher.init(Cipher.DECRYPT_MODE, mSkeySpecResponse);
 		byte[] decrypted = mCipher.doFinal(encrypted);
 		return Arrays.copyOfRange(decrypted, mCipher.getBlockSize(), encrypted.length-2);
 	}

@@ -1,5 +1,7 @@
 package com.example.test.ble.peripheral;
 import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.UUID;
@@ -26,23 +28,39 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.ParcelUuid;
 import android.util.Log;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.Toast;
+
+import com.example.test.ble.AesTools;
+import com.example.test.ble.BleMsgCtrol;
+import com.example.test.ble.BleStateMachine;
+import com.example.test.ble.ByteUtils;
+import com.example.test.ble.BleConstants;
+import com.example.test.ble.IAction;
+import com.example.test.ble.Msg;
+import com.example.test.ble.MsgAdapter;
+import com.example.test.ble.central.DeviceControlActivity;
 
 public class PeripheralActivity extends Activity{
 	private static final String TAG = "PeripheralActivity";
 	private Context mContext;
+	private ListView msgListView;
+	private EditText msgEditText;
+	private Button btnSend;
+	private MsgAdapter adapter;
+	private List<Msg> msgList = new ArrayList<Msg>();
+	
 	private BluetoothManager mBluetoothManager; 
     private BluetoothGattServer  mGattServer; 
     private BluetoothAdapter mAdapter;
     private BluetoothLeAdvertiser mLeAdvertiser;
     private AdvertiseCallback mAdvertiseCallback; 
     
-    private BluetoothGattCharacteristic mWriteReqDataChar;
-    private BluetoothGattCharacteristic mWriteReqStartChar;
-    private BluetoothGattCharacteristic mWriteReqEndChar;
-    private BluetoothGattCharacteristic mNotifyRspStartChar;
-    private BluetoothGattCharacteristic mReadRspDataChar;
-    private BluetoothGattCharacteristic mWriteRspIncrementChar;
+    private BleMsgCtrol mBleMsgCtrol = new BleMsgCtrol();
     private Timer mTimeOut = null;
     private int mRspOffset = 0;
 	private byte[]   mReqJsonBytes = null;
@@ -62,14 +80,46 @@ public class PeripheralActivity extends Activity{
     private SendingRspAction mSendingRspAction = new SendingRspAction();
     private ReturnIdleAction mReturnIdleAction = new ReturnIdleAction();
     
+    private String mAutoReply = "Hi";
 	@Override
 	public void onCreate(Bundle savedInstanceState){
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_peripheral);
+    	setContentView(R.layout.activity_chatting);
+        adapter = new MsgAdapter(PeripheralActivity.this, R.xml.msg_item, msgList);
+        msgEditText = (EditText) findViewById(R.id.input_et);
+        btnSend = (Button) findViewById(R.id.send);
+        msgListView = (ListView) findViewById(R.id.msg_list);
+        msgListView.setAdapter(adapter);
+        btnSend.setOnClickListener(mOnSendClickListener);
 		mContext = this;
 		initDevice();
 		initStateMachine();
 	}
+	
+    OnClickListener mOnSendClickListener = new OnClickListener() {
+		@Override
+		public void onClick(View v) {
+			String content = msgEditText.getText().toString();
+			if (!"".equals(content)) {
+				Msg msg = new Msg(content, Msg.TYPE_SENT);
+				msgList.add(msg);
+				adapter.notifyDataSetChanged();
+				msgListView.setSelection(msgList.size());
+				msgEditText.setText("");
+			    
+			    try {
+			    	byte[] bytes = AesTools.getInstance().encryptReq(content.getBytes("UTF8"));
+			    	Log.d("yangjian","all data : "+ByteUtils.bytesToHexString(bytes));
+//					mBleMsgCtrol.mReqJsonBytes = ByteUtils.bytesSplit(bytes, BleConstants.BLE_MAX_DATA_ONCE);
+//					mBluetoothLeService.sendMsg(mBleMsgCtrol);
+				} catch (UnsupportedEncodingException e) {
+					e.printStackTrace();
+				} catch (Exception e) {
+					e.printStackTrace();
+				};
+			}
+		}
+	};
 	
 	void initDevice() {
 		if (!getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)) {
@@ -101,34 +151,33 @@ public class PeripheralActivity extends Activity{
 	}
 	
 	void initStateMachine(){
-	    mBleStateMachine.insertAction(BleStateMachine.STATE_BEGIN, Constants.BLE_STATE_IDLE,Constants.BLE_EVT_BEGIN,null);
-	    mBleStateMachine.insertAction(Constants.BLE_STATE_IDLE,Constants.BLE_STATE_RECEIVING_REQ,Constants.BLE_EVT_REQ_START,mStartReqAction);
-	    mBleStateMachine.insertAction(Constants.BLE_STATE_RECEIVING_REQ,Constants.BLE_STATE_RECEIVING_REQ,Constants.BLE_EVT_REQ_RECEIVING,mReceivingReqAction);
-	    mBleStateMachine.insertAction(Constants.BLE_STATE_RECEIVING_REQ,Constants.BLE_STATE_PROCESSING_REQ,Constants.BLE_EVT_REQ_END,mProcessingReqAction);
-	    mBleStateMachine.insertAction(Constants.BLE_STATE_PROCESSING_REQ,Constants.BLE_STATE_SENDING_RSP,Constants.BLE_EVT_RSP_SENDING,mSendingRspAction);
-	    mBleStateMachine.insertAction(Constants.BLE_STATE_SENDING_RSP,Constants.BLE_STATE_SENDING_RSP,Constants.BLE_EVT_RSP_SENDING,mSendingRspAction);
-	    mBleStateMachine.insertAction(Constants.BLE_STATE_SENDING_RSP,Constants.BLE_STATE_IDLE,Constants.BLE_EVT_RSP_END,mReturnIdleAction);
-	    mBleStateMachine.insertAction(Constants.BLE_STATE_RECEIVING_REQ,Constants.BLE_STATE_IDLE,Constants.BLE_EVT_RECEIVE_ERROR,mReturnIdleAction);
-	    mBleStateMachine.insertAction(Constants.BLE_STATE_SENDING_RSP,Constants.BLE_STATE_IDLE,Constants.BLE_EVT_SEND_ERROR,mReturnIdleAction);
-	    mBleStateMachine.insertAction(Constants.BLE_STATE_RECEIVING_REQ,Constants.BLE_STATE_IDLE,Constants.BLE_EVT_TIMEOUT,mReturnIdleAction);
-	    mBleStateMachine.insertAction(Constants.BLE_STATE_PROCESSING_REQ,Constants.BLE_STATE_IDLE,Constants.BLE_EVT_TIMEOUT,mReturnIdleAction);
-	    mBleStateMachine.insertAction(Constants.BLE_STATE_SENDING_RSP,Constants.BLE_STATE_IDLE,Constants.BLE_EVT_TIMEOUT,mReturnIdleAction);
-	    mBleStateMachine.insertAction(Constants.BLE_STATE_IDLE,Constants.BLE_STATE_IDLE,Constants.BLE_EVT_TIMEOUT,mReturnIdleAction);
-	    mBleStateMachine.inputEvent(Constants.BLE_EVT_BEGIN, null);
+	    mBleStateMachine.insertAction(BleStateMachine.STATE_BEGIN, BleConstants.BLE_STATE_IDLE,BleConstants.BLE_EVT_BEGIN,null);
+	    mBleStateMachine.insertAction(BleConstants.BLE_STATE_IDLE,BleConstants.BLE_STATE_RECEIVING_REQ,BleConstants.BLE_EVT_REQ_START,mStartReqAction);
+	    mBleStateMachine.insertAction(BleConstants.BLE_STATE_RECEIVING_REQ,BleConstants.BLE_STATE_RECEIVING_REQ,BleConstants.BLE_EVT_REQ_RECEIVING,mReceivingReqAction);
+	    mBleStateMachine.insertAction(BleConstants.BLE_STATE_RECEIVING_REQ,BleConstants.BLE_STATE_PROCESSING_REQ,BleConstants.BLE_EVT_REQ_END,mProcessingReqAction);
+	    mBleStateMachine.insertAction(BleConstants.BLE_STATE_PROCESSING_REQ,BleConstants.BLE_STATE_SENDING_RSP,BleConstants.BLE_EVT_RSP_SENDING,mSendingRspAction);
+	    mBleStateMachine.insertAction(BleConstants.BLE_STATE_SENDING_RSP,BleConstants.BLE_STATE_SENDING_RSP,BleConstants.BLE_EVT_RSP_SENDING,mSendingRspAction);
+	    mBleStateMachine.insertAction(BleConstants.BLE_STATE_SENDING_RSP,BleConstants.BLE_STATE_IDLE,BleConstants.BLE_EVT_RSP_END,mReturnIdleAction);
+	    mBleStateMachine.insertAction(BleConstants.BLE_STATE_RECEIVING_REQ,BleConstants.BLE_STATE_IDLE,BleConstants.BLE_EVT_RECEIVE_ERROR,mReturnIdleAction);
+	    mBleStateMachine.insertAction(BleConstants.BLE_STATE_SENDING_RSP,BleConstants.BLE_STATE_IDLE,BleConstants.BLE_EVT_SEND_ERROR,mReturnIdleAction);
+	    mBleStateMachine.insertAction(BleConstants.BLE_STATE_RECEIVING_REQ,BleConstants.BLE_STATE_IDLE,BleConstants.BLE_EVT_TIMEOUT,mReturnIdleAction);
+	    mBleStateMachine.insertAction(BleConstants.BLE_STATE_PROCESSING_REQ,BleConstants.BLE_STATE_IDLE,BleConstants.BLE_EVT_TIMEOUT,mReturnIdleAction);
+	    mBleStateMachine.insertAction(BleConstants.BLE_STATE_SENDING_RSP,BleConstants.BLE_STATE_IDLE,BleConstants.BLE_EVT_TIMEOUT,mReturnIdleAction);
+	    mBleStateMachine.insertAction(BleConstants.BLE_STATE_IDLE,BleConstants.BLE_STATE_IDLE,BleConstants.BLE_EVT_TIMEOUT,mReturnIdleAction);
+	    mBleStateMachine.inputEvent(BleConstants.BLE_EVT_BEGIN, null);
 	}
 
 	/*************START : BLE Action******************/
 	private class StartReqAction implements IAction{
 		public boolean performAction(byte[] value) {
-			Log.d("yangjian","step 1 : Received a start flag , data type is REQUEST_START");
+
 			mTimeOut = new Timer();
 			mTimeOut.schedule(new TimerTask() {
 				public void run() {
 					Log.d("yangjian","Start timeout with 5s");
-					mBleStateMachine.inputEvent(Constants.BLE_EVT_TIMEOUT, null);
+					mBleStateMachine.inputEvent(BleConstants.BLE_EVT_TIMEOUT, null);
 				}
-			}, Constants.BLE_SET_TIMEOUT*1000);
-			mNotifyRspStartChar.setValue("");
+			}, BleConstants.BLE_SET_TIMEOUT*1000);
 			mReqJsonBytes = null;
 			return true;
 		}
@@ -136,7 +185,7 @@ public class PeripheralActivity extends Activity{
 	
 	private class ReceivingReqAction implements IAction{
 		public boolean performAction(byte[] value) {
-			Log.d("yangjian","step 2 : Received a data chunk , data type is RECEIVING_REQUEST , size = "+value.length);//+"value = "+Utils.bytesToHexString(value)
+			Log.d("yangjian","step 2 : Received a data chunk , data type is RECEIVING_REQUEST , size = "+value.length+" value = "+ByteUtils.bytesToHexString(value));//
     		mReqJsonBytes = ByteUtils.byteMerger(mReqJsonBytes, value);
 			return true;
 		}
@@ -144,47 +193,15 @@ public class PeripheralActivity extends Activity{
 	
 	private class ProcessingReqAction implements IAction{
 		public boolean performAction(byte[] value) {
-    		String recString = null;
-    		JSONObject reqJsonObject = null;
-    		JSONObject rspJsonObject = null;
-    		JsonOperation jsonOper = null;
+    		String reqString = null;
     		byte[] rspData = null;
-
         	try {
-        		if(mReqJsonBytes.length <= 3000){
-        			recString = new String(AesTools.getInstance().decrypt(mReqJsonBytes) ,"UTF-8");
-                	try {
-    					reqJsonObject = new JSONObject(recString);
-    				} catch (JSONException e) {
-    					reqJsonObject = null;
-    					e.printStackTrace();
-    				}
-                	if(reqJsonObject != null){
-                		Log.d("yangjian","--step 3 : Received all of the data chunks , request json is "+reqJsonObject);//"--step" means the info is very important
-                		jsonOper = JsonOperationFactory.createJsonOperation(reqJsonObject.getString("method"),PeripheralActivity.this);
-                	}else{
-                		Log.d("yangjian","--step 3 : Received all of the data chunks , IsParsingJsonError");//"--step" means the info is very important
-                		jsonOper = JsonOperationFactory.createJsonOperation("IsParsingJsonError",null);
-                	}
-        		}else{
-        			Log.d("yangjian","--step 3 : Received all of the data , IsRequestTooLong ");//"--step" means the info is very important
-        			jsonOper = JsonOperationFactory.createJsonOperation("IsRequestTooLong",null);
-        		}
-        		rspJsonObject = jsonOper.jsonOperation(reqJsonObject);
-	            Log.d("yangjian","--step 4 : Get the response json , response Json = "+rspJsonObject);//"--step" means the info is very important
-	            
-				rspData = AesTools.getInstance().encrypt(rspJsonObject.toString().getBytes("UTF8"));
-				Log.d("yangjian","step 5 : Encrypt the response json "+", rspData.length = "+rspData.length+" , rspData = "+ByteUtils.bytesToHexString(rspData));
-	            
-	            mRspJsonBytes = null;
-	            mRspJsonBytes = ByteUtils.bytesSplit(rspData,512);
-	            Log.d("yangjian","step 6 : Split the encrypted response data to many parts so that send to SC Client");
-	            
-	            mReadRspState = RESPONSE_STATE_READY;
-	            mRspOffset=0;
-	            Log.d("yangjian","step 7 : Notify the SC Client to read response data");
-	        	
-	            mReqJsonBytes = null;
+    			reqString = new String(AesTools.getInstance().decryptReq(mReqJsonBytes) ,"UTF-8");
+
+				Msg msg = new Msg(reqString, Msg.TYPE_SENT);
+				msgList.add(msg);
+				adapter.notifyDataSetChanged();
+				msgListView.setSelection(msgList.size());
 			} catch (UnsupportedEncodingException e1) {
 				e1.printStackTrace();
 			} catch (Exception e1) {
@@ -206,7 +223,6 @@ public class PeripheralActivity extends Activity{
     		}
 			return true;
 		}
-		
 	}
 	
 	private class ReturnIdleAction implements IAction{
@@ -217,7 +233,6 @@ public class PeripheralActivity extends Activity{
 		}
 	}
 	/**************END : BLE Action*****************/
-	
 	
 	private final BluetoothGattServerCallback mGattServerCallback = new BluetoothGattServerCallback(){
         @Override
@@ -235,63 +250,52 @@ public class PeripheralActivity extends Activity{
         @Override
         public void onCharacteristicReadRequest(BluetoothDevice device, int requestId, int offset, 
                                                 BluetoothGattCharacteristic characteristic) {
+        	Log.d("yangjian","["+Thread.currentThread().getStackTrace()[2].getFileName()+","+
+        	           Thread.currentThread().getStackTrace()[2].getMethodName()+","+
+        	           Thread.currentThread().getStackTrace()[2].getLineNumber()+"]");
         	byte[] sentinel_array = new byte[0];
-            if(characteristic.getUuid().toString().equalsIgnoreCase(Constants.RESPONSE_START)){
-            	try {
-	            	switch(mReadRspState){
-	            		case RESPONSE_STATE_IDLE:
-	            			mNotifyRspStartChar.setValue("".getBytes("UTF8"));
-	            			break;
-	            		case RESPONSE_STATE_READY:
-	            		case RESPONSE_STATE_END:
-							mNotifyRspStartChar.setValue("ready".getBytes("UTF8"));
-	            			break;	
-	            	}
-        		} catch (UnsupportedEncodingException e) {
-					e.printStackTrace();
-				}
-            }
-            
-        	if(characteristic.getUuid().toString().equalsIgnoreCase(Constants.RESPONSE_DATA)){
-            	switch(mReadRspState){
-        		case RESPONSE_STATE_IDLE:
-        			Log.d("yangjian","Read response data , state is idle");
-	        		mReadRspDataChar.setValue(sentinel_array);
-        			break;
-        		case RESPONSE_STATE_READY:
-        			Log.d("yangjian","Read response data , state is ready , offset = "+mRspOffset);
-        			mReadRspDataChar.setValue(mRspJsonBytes[mRspOffset]);
-        			mReadRspState = RESPONSE_STATE_IDLE;
-        			break;
-        		case RESPONSE_STATE_END:
-        			Log.d("yangjian","step 10 : Read response data over , state is end");
-            		mReadRspDataChar.setValue(sentinel_array);
-            		mRspOffset = 0;
-            		mReadRspState = RESPONSE_STATE_IDLE;
-            		mBleStateMachine.inputEvent(Constants.BLE_EVT_RSP_END, null);
-        			break;
-	        	}
+        	if(characteristic.getUuid().toString().equalsIgnoreCase(BleConstants.RESPONSE_DATA)){
+        		byte currentBytes[] = mBleMsgCtrol.getCurrentRspBytes();
+        		if (currentBytes != null) {
+        			Log.d("yangjian","------currentBytes = "+currentBytes);
+        			characteristic.setValue(currentBytes);
+        		} else {
+        			characteristic.setValue(sentinel_array);
+        		}
         	}
-
             super.onCharacteristicReadRequest(device, requestId, offset, characteristic);
             mGattServer.sendResponse(device, requestId, BluetoothGatt.GATT_SUCCESS, offset, characteristic.getValue());
         }
 
         @Override
         public void onCharacteristicWriteRequest(BluetoothDevice device, int requestId, BluetoothGattCharacteristic characteristic, 
-                                                 boolean preparedWrite, boolean responseNeeded, int offset, byte[] value) 
-        {
-        	if(characteristic.getUuid().toString().equalsIgnoreCase(Constants.REQUEST_START)){
-        		mBleStateMachine.inputEvent(Constants.BLE_EVT_REQ_START, null);
-        	}else if(characteristic.getUuid().toString().equalsIgnoreCase(Constants.REQUEST_DATA)){
-        		if(mBleStateMachine.inputEvent(Constants.BLE_EVT_REQ_RECEIVING, value) == -1){
-        			mBleStateMachine.inputEvent(Constants.BLE_EVT_RECEIVE_ERROR, null);
+                                                 boolean preparedWrite, boolean responseNeeded, int offset, byte[] value)  {
+        	String uuid = characteristic.getUuid().toString();
+        	
+        	if(uuid.equalsIgnoreCase(BleConstants.REQUEST_START)){
+        		mBleStateMachine.inputEvent(BleConstants.BLE_EVT_REQ_START, null);
+        	}else if(uuid.equalsIgnoreCase(BleConstants.REQUEST_DATA)){
+        		if(mBleStateMachine.inputEvent(BleConstants.BLE_EVT_REQ_RECEIVING, value) == -1){
+        			mBleStateMachine.inputEvent(BleConstants.BLE_EVT_RECEIVE_ERROR, null);
         		}
-        	}else if(characteristic.getUuid().toString().equalsIgnoreCase(Constants.REQUEST_END)){
-        		mBleStateMachine.inputEvent(Constants.BLE_EVT_REQ_END, null);
-        	}else if(characteristic.getUuid().toString().equalsIgnoreCase(Constants.RESPONSE_INCREMENT)){
-        		if(mBleStateMachine.inputEvent(Constants.BLE_EVT_RSP_SENDING, null) == -1){
-        			mBleStateMachine.inputEvent(Constants.BLE_EVT_SEND_ERROR, null);
+        	}else if(uuid.equalsIgnoreCase(BleConstants.REQUEST_END)){
+        		mBleStateMachine.inputEvent(BleConstants.BLE_EVT_REQ_END, null);
+
+				try {
+					byte[] rspData = AesTools.getInstance().encryptRsp(mAutoReply.getBytes("UTF8"));
+					mBleMsgCtrol.clearOffsetRsp();
+					mBleMsgCtrol.mRspBytes = ByteUtils.bytesSplit(rspData, BleConstants.BLE_MAX_DATA_ONCE);
+	            	mBleMsgCtrol.mE3NotifyRspStartChar.setValue("go");
+				} catch (UnsupportedEncodingException e) {
+					e.printStackTrace();
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+
+        		mGattServer.notifyCharacteristicChanged(device, mBleMsgCtrol.mE3NotifyRspStartChar, false);
+        	}else if(characteristic.getUuid().toString().equalsIgnoreCase(BleConstants.RESPONSE_INCREMENT)){
+        		if(mBleStateMachine.inputEvent(BleConstants.BLE_EVT_RSP_SENDING, null) == -1){
+        			mBleStateMachine.inputEvent(BleConstants.BLE_EVT_SEND_ERROR, null);
         		}
         	}else{
         		Log.d("yangjian","write characteristic error !");
@@ -351,26 +355,26 @@ public class PeripheralActivity extends Activity{
 	public void startAdvertising() {
         if (mLeAdvertiser != null) {
         	// build SC Station Gatt Service
-            mGattServer = mBluetoothManager.openGattServer(this, mGattServerCallback);
-            mWriteReqDataChar = new BluetoothGattCharacteristic(UUID.fromString(Constants.REQUEST_DATA), 
+        	mGattServer = mBluetoothManager.openGattServer(this, mGattServerCallback);
+            mBleMsgCtrol.mE3WriteReqDataChar = new BluetoothGattCharacteristic(UUID.fromString(BleConstants.REQUEST_DATA), 
     				BluetoothGattCharacteristic.PROPERTY_WRITE,BluetoothGattCharacteristic.PERMISSION_WRITE);
-            mWriteReqStartChar = new BluetoothGattCharacteristic(UUID.fromString(Constants.REQUEST_START), 
+            mBleMsgCtrol.mE3WriteReqStartChar = new BluetoothGattCharacteristic(UUID.fromString(BleConstants.REQUEST_START), 
     				BluetoothGattCharacteristic.PROPERTY_WRITE,BluetoothGattCharacteristic.PERMISSION_WRITE);    
-            mWriteReqEndChar = new BluetoothGattCharacteristic(UUID.fromString(Constants.REQUEST_END), 
+            mBleMsgCtrol.mE3WriteReqEndChar = new BluetoothGattCharacteristic(UUID.fromString(BleConstants.REQUEST_END), 
     				BluetoothGattCharacteristic.PROPERTY_WRITE,BluetoothGattCharacteristic.PERMISSION_WRITE); 
-            mReadRspDataChar = new BluetoothGattCharacteristic(UUID.fromString(Constants.RESPONSE_DATA), 
+            mBleMsgCtrol.mE3ReadRspDataChar = new BluetoothGattCharacteristic(UUID.fromString(BleConstants.RESPONSE_DATA), 
     				BluetoothGattCharacteristic.PROPERTY_READ,BluetoothGattCharacteristic.PERMISSION_READ);
-            mNotifyRspStartChar = new BluetoothGattCharacteristic(UUID.fromString(Constants.RESPONSE_START), 
-    				BluetoothGattCharacteristic.PROPERTY_READ,BluetoothGattCharacteristic.PERMISSION_READ);
-            mWriteRspIncrementChar = new BluetoothGattCharacteristic(UUID.fromString(Constants.RESPONSE_INCREMENT), 
+            mBleMsgCtrol.mE3NotifyRspStartChar = new BluetoothGattCharacteristic(UUID.fromString(BleConstants.RESPONSE_START), 
+    				BluetoothGattCharacteristic.PROPERTY_NOTIFY,BluetoothGattCharacteristic.PERMISSION_READ);
+            mBleMsgCtrol.mE3WriteRspIncrementChar = new BluetoothGattCharacteristic(UUID.fromString(BleConstants.RESPONSE_INCREMENT), 
     				BluetoothGattCharacteristic.PROPERTY_WRITE,BluetoothGattCharacteristic.PERMISSION_WRITE);
-            BluetoothGattService RequestResponseService = new BluetoothGattService(UUID.fromString(Constants.SERVICE_UUID),BluetoothGattService.SERVICE_TYPE_PRIMARY);
-    		RequestResponseService.addCharacteristic(mWriteReqDataChar);
-    		RequestResponseService.addCharacteristic(mWriteReqStartChar);
-    		RequestResponseService.addCharacteristic(mWriteReqEndChar);
-    		RequestResponseService.addCharacteristic(mReadRspDataChar);
-            RequestResponseService.addCharacteristic(mNotifyRspStartChar);
-            RequestResponseService.addCharacteristic(mWriteRspIncrementChar);
+            BluetoothGattService RequestResponseService = new BluetoothGattService(UUID.fromString(BleConstants.SERVICE_UUID),BluetoothGattService.SERVICE_TYPE_PRIMARY);
+    		RequestResponseService.addCharacteristic(mBleMsgCtrol.mE3WriteReqDataChar);
+    		RequestResponseService.addCharacteristic(mBleMsgCtrol.mE3WriteReqStartChar);
+    		RequestResponseService.addCharacteristic(mBleMsgCtrol.mE3WriteReqEndChar);
+    		RequestResponseService.addCharacteristic(mBleMsgCtrol.mE3ReadRspDataChar);
+            RequestResponseService.addCharacteristic(mBleMsgCtrol.mE3NotifyRspStartChar);
+            RequestResponseService.addCharacteristic(mBleMsgCtrol.mE3WriteRspIncrementChar);
             mGattServer.addService(RequestResponseService);
             mLeAdvertiser.startAdvertising(buildAdvertiseSettings(), buildAdvertiseData(),mAdvertiseCallback);
         } 
@@ -384,7 +388,7 @@ public class PeripheralActivity extends Activity{
 	
 	private AdvertiseData buildAdvertiseData() {
     	AdvertiseData.Builder dataBuilder = new AdvertiseData.Builder();
-    	dataBuilder.addServiceUuid(ParcelUuid.fromString(Constants.SERVICE_UUID));
+    	dataBuilder.addServiceUuid(ParcelUuid.fromString(BleConstants.SERVICE_UUID));
 		dataBuilder.setIncludeDeviceName(true);
         return dataBuilder.build();
     }

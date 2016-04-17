@@ -1,6 +1,6 @@
-package com.example.test.ble.peripheral;
+package com.example.test.ble;
 
-public class Constants {
+public class BleConstants {
 	/********BLE UUIDs*******************/
 	public static final String SERVICE_UUID = "922d84d0-1ab3-4a6c-bd7a-fb00780a3dee";
 	public static final String REQUEST_DATA = "89dafb6e-bb39-4aad-a7a3-78cd1d050470";
@@ -29,4 +29,6 @@ public class Constants {
 	public static final int BLE_STATE_SENDING_RSP = BLE_STATE_BEGIN + 4;
 	
 	public static final int BLE_SET_TIMEOUT = 5;
+	
+	public static final int BLE_MAX_DATA_ONCE = 17;
 }

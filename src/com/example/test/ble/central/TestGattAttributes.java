@@ -18,7 +18,7 @@ package com.example.test.ble.central;
 
 import java.util.HashMap;
 
-import com.example.test.ble.peripheral.Constants;
+import com.example.test.ble.BleConstants;
 
 
 /**
@@ -29,14 +29,14 @@ public class TestGattAttributes {
 
     static {
         // Sample Services.
-        attributes.put(Constants.SERVICE_UUID, "E3 Gatt Service");
+        attributes.put(BleConstants.SERVICE_UUID, "E3 Gatt Service");
         // Sample Characteristics.
-        attributes.put(Constants.REQUEST_DATA, "REQUEST_DATA");
-        attributes.put(Constants.REQUEST_START, "REQUEST_START");
-        attributes.put(Constants.REQUEST_END, "REQUEST_END");
-        attributes.put(Constants.RESPONSE_DATA, "RESPONSE_DATA");
-        attributes.put(Constants.RESPONSE_START, "RESPONSE_START");
-        attributes.put(Constants.RESPONSE_INCREMENT, "RESPONSE_INCREMENT");
+        attributes.put(BleConstants.REQUEST_DATA, "REQUEST_DATA");
+        attributes.put(BleConstants.REQUEST_START, "REQUEST_START");
+        attributes.put(BleConstants.REQUEST_END, "REQUEST_END");
+        attributes.put(BleConstants.RESPONSE_DATA, "RESPONSE_DATA");
+        attributes.put(BleConstants.RESPONSE_START, "RESPONSE_START");
+        attributes.put(BleConstants.RESPONSE_INCREMENT, "RESPONSE_INCREMENT");
     }
 
     public static String lookup(String uuid, String defaultName) {

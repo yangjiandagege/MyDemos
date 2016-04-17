@@ -1,4 +1,4 @@
-package com.example.test.chatting;
+package com.example.test.ble;
 
 import java.util.List;
 

@@ -3,6 +3,9 @@ package com.example.test.chatting;
 import java.util.ArrayList;
 import java.util.List;
 import com.example.test.R;
+import com.example.test.ble.Msg;
+import com.example.test.ble.MsgAdapter;
+
 import android.app.Activity;
 import android.os.Bundle;
 import android.view.View;
