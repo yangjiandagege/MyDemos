@@ -1,4 +1,4 @@
-package com.example.test.slide;
+package com.example.test.diyviews.slidemenu;
 
 import android.content.Context;
 import android.util.AttributeSet;
@@ -101,32 +101,4 @@ public class SlideMenu extends HorizontalScrollView{
             slideOutMenu();
         }
     }
-    /**
-     * ��������ʱ    
-     */
-//    @Override
-//    protected void onScrollChanged(int l, int t, int oldl, int oldt) {
-//        // TODO Auto-generated method stub
-//        super.onScrollChanged(l, t, oldl, oldt);
-//        //ʵ�ֳ���ʽ����
-//        float scale = l * 1.0f /mMenuWidth ;//1 ~ 0
-//        float menuScale = 1.0f - scale * 0.3f;
-//        float menuAlpha = 0.0f + 1.0f * (1 - scale);
-//        float contentScale = 0.8f + 0.2f * scale;
-//        //�������Զ���������TranslationX
-//        ViewHelper.setTranslationX(mMenu, mMenuWidth*scale*0.8f);
-//        
-//        //���˵�������
-//        ViewHelper.setScaleX(mMenu, menuScale);
-//        ViewHelper.setScaleY(mMenu, menuScale);
-//        //���˵���͸��������
-//        ViewHelper.setAlpha(mMenu, menuAlpha);
-//        
-//        //�Ҳ����ݵ�����
-//        ViewHelper.setPivotX(mContent, 0);
-//        ViewHelper.setPivotY(mContent, mContent.getHeight() / 2);
-//        ViewHelper.setScaleY(mContent, contentScale);
-//        ViewHelper.setScaleX(mContent, contentScale);
-//    }
-    
 }

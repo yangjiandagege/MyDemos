@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical" >
 
-    <com.example.test.slide.SlideMenu
+    <com.example.test.diyviews.slidemenu.SlideMenu
         android:id="@+id/slideMenu"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -184,5 +184,5 @@
 				</LinearLayout>
 			</LinearLayout>
            </LinearLayout>
-    </com.example.test.slide.SlideMenu>
+    </com.example.test.diyviews.slidemenu.SlideMenu>
 </LinearLayout>

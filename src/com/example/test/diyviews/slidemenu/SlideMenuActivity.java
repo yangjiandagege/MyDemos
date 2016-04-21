@@ -1,4 +1,4 @@
-package com.example.test.slide;
+package com.example.test.diyviews.slidemenu;
 
 import com.example.test.R;
 

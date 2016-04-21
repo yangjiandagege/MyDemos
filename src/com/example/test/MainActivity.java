@@ -19,7 +19,10 @@ public class MainActivity extends BaseActivity{
 		btPerform[++i] = new BtPerform("Touch test", i, Color.CYAN, MainActivity.this, com.example.test.touch.MainActivity.class);
 		btPerform[++i] = new BtPerform("Sensors demo", i, Color.CYAN, MainActivity.this, com.example.test.sensors.ListViewActivity.class);
 		btPerform[++i] = new BtPerform("QQ login", i, Color.CYAN, MainActivity.this, com.example.test.qqauth.MainActivity.class);
+		btPerform[++i] = new BtPerform("Loop advertisement", i, Color.CYAN, MainActivity.this, com.example.test.loopad.LoopAdActivity.class);
+		btPerform[++i] = new BtPerform("Asynctask", i, Color.CYAN, MainActivity.this, com.example.test.asynctask.AsyncTaskActivity.class);
 		btPerform[++i] = new BtPerform("DIY ViewGroup : My ViewPager", i, Color.CYAN, MainActivity.this, com.example.test.diyviews.slidingconflict.MainActivity.class);
+		btPerform[++i] = new BtPerform("DIY ViewGroup : SlideMenu", i, Color.CYAN, MainActivity.this, com.example.test.diyviews.slidemenu.SlideMenuActivity.class);
 		btPerform[++i] = new BtPerform("end", i, Color.BLACK, null);
 		return btPerform;
 	}
