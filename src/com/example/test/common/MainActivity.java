@@ -31,22 +31,21 @@ import android.util.Xml;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.View.OnClickListener;
-import android.widget.Button;
 import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.RemoteViews;
-import android.widget.ScrollView;
 import android.widget.Toast;
+import com.example.test.BaseActivity;
+import com.example.test.BtPerform;
+import com.example.test.Operation;
 import com.example.test.R;
 import com.example.test.Util;
 import com.example.test.utils.*;
 
-public class MainActivity extends Activity  implements OnClickListener{
-	BtNameId mBtNameId[] = new BtNameId[50];
+public class MainActivity extends BaseActivity{
+	BtPerform mBtPerform[] = new BtPerform[50];
     private NotificationManager nm;
 	private View mRLayout;  
-	
+	private Context mContext;
     private int Notification_ID_BASE = 110;
     private Notification baseNF;
     private int Notification_ID_MEDIA = 119;
@@ -62,7 +61,7 @@ public class MainActivity extends Activity  implements OnClickListener{
 	@Override
 	public void onCreate(Bundle savedInstanceState){
 		super.onCreate(savedInstanceState);
-		initUi(MainActivity.this);
+		mContext = MainActivity.this;
 		initDb();
 		mRLayout = getWindow().getDecorView();
         nm = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
@@ -70,53 +69,65 @@ public class MainActivity extends Activity  implements OnClickListener{
         pd = PendingIntent.getActivity(MainActivity.this, 0, intent, 0);
 	}
 	
-	private void initUi(Context context){
-		final ScrollView myScrollView = new ScrollView(context);
-		final LinearLayout myLayout = new LinearLayout(context);  
-		myLayout.setOrientation(LinearLayout.VERTICAL);
-		myScrollView.addView(myLayout);
+	public BtPerform[] initButtons(){
+		BtPerform[] btPerform = new BtPerform[BT_NUM];
 		int i = -1;
-		mBtNameId[++i] = new BtNameId("getAppName", i, Color.GRAY, new getAppName());
-		mBtNameId[++i] = new BtNameId("getAppVersionName", i, Color.GRAY, new getAppVersionName());
-		mBtNameId[++i] = new BtNameId("serializable", i, Color.CYAN, new serializable());
-		mBtNameId[++i] = new BtNameId("unserializable", i, Color.CYAN, new unserializable());
-		mBtNameId[++i] = new BtNameId("dialog1", i, Color.GREEN, new dialog_1());
-		mBtNameId[++i] = new BtNameId("dialog2", i, Color.GREEN, new dialog_2());
-		mBtNameId[++i] = new BtNameId("dialog3", i, Color.GREEN, new dialog_3());
-		mBtNameId[++i] = new BtNameId("dialog4", i, Color.GREEN, new dialog_4());
-		mBtNameId[++i] = new BtNameId("dialog5", i, Color.GREEN, new dialog_5());
-		mBtNameId[++i] = new BtNameId("dialog6", i, Color.GREEN, new dialog_6());
-		mBtNameId[++i] = new BtNameId("xml to object", i, Color.YELLOW, new xmlToObject());
-		mBtNameId[++i] = new BtNameId("SYSTEM_UI_FLAG_VISIBLE", i, Color.CYAN, new systemUiFlagVisible());
-		mBtNameId[++i] = new BtNameId("INVISIBLE", i, Color.CYAN, new invisible());
-		mBtNameId[++i] = new BtNameId("SYSTEM_UI_FLAG_FULLSCREEN", i, Color.CYAN, new systemUiFlagFullScreen());
-		mBtNameId[++i] = new BtNameId("SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN", i, Color.CYAN, new systemUiFlagLayoutFullScreen());
-		mBtNameId[++i] = new BtNameId("SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION", i, Color.CYAN, new systemUiFlagLayoutHideNavigation());
-		mBtNameId[++i] = new BtNameId("SYSTEM_UI_LAYOUT_FLAGS", i, Color.CYAN, new systemUiLayoutFlags());
-		mBtNameId[++i] = new BtNameId("SYSTEM_UI_FLAG_HIDE_NAVIGATION", i, Color.CYAN, new systemUiFlagVisible());
-		mBtNameId[++i] = new BtNameId("SYSTEM_UI_FLAG_LOW_PROFILE", i, Color.CYAN, new systemUiFlagLowProfile());
-		mBtNameId[++i] = new BtNameId("call jni", i, Color.RED, new callJni());
-		mBtNameId[++i] = new BtNameId("screen info", i, Color.GRAY, new showScreenInfo());
-		mBtNameId[++i] = new BtNameId("database insert", i, Color.GREEN, new insertDatabase());
-		mBtNameId[++i] = new BtNameId("database update", i, Color.GREEN, new updateDatabase());
-		mBtNameId[++i] = new BtNameId("database show", i, Color.GREEN, new readDatabase());
-		mBtNameId[++i] = new BtNameId("sharedPreferences write", i, Color.GRAY, new sharedPreferencesWrite());
-		mBtNameId[++i] = new BtNameId("sharedPreferences read", i, Color.GRAY, new sharedPreferencesRead());
-		mBtNameId[++i] = new BtNameId("BaseNotification", i, Color.DKGRAY, new BaseNotification());
-		mBtNameId[++i] = new BtNameId("UpdateBaseNotification", i, Color.DKGRAY, new UpdateBaseNotification());
-		mBtNameId[++i] = new BtNameId("ClearBaseNotification", i, Color.DKGRAY, new ClearBaseNotification());
-		mBtNameId[++i] = new BtNameId("MediaNotification", i, Color.DKGRAY, new MediaNotification());
-		mBtNameId[++i] = new BtNameId("ClearMediaNotification", i, Color.DKGRAY, new ClearMediaNotification());
-		mBtNameId[++i] = new BtNameId("CustomNotification", i, Color.DKGRAY, new CustomNotification());
-		mBtNameId[++i] = new BtNameId("ClearAll", i, Color.DKGRAY, new ClearAllNotification());
-		mBtNameId[++i] = new BtNameId("end", i, Color.BLACK, null);
-		for(int j = 0; mBtNameId != null ; j++){
-			addButton(myLayout,mBtNameId[j].getId(),mBtNameId[j].getName(),mBtNameId[j].getColor());
-			if(mBtNameId[j].getName().equalsIgnoreCase("end")){
-				break;
+		btPerform[++i] = new BtPerform("getAppName", i, Color.GRAY, new getAppName());
+		btPerform[++i] = new BtPerform("getAppVersionName", i, Color.GRAY, new getAppVersionName());
+		btPerform[++i] = new BtPerform("serializable", i, Color.CYAN, new serializable());
+		btPerform[++i] = new BtPerform("unserializable", i, Color.CYAN, new unserializable());
+		btPerform[++i] = new BtPerform("dialog1", i, Color.GREEN, new dialog_1());
+		btPerform[++i] = new BtPerform("dialog2", i, Color.GREEN, new dialog_2());
+		btPerform[++i] = new BtPerform("dialog3", i, Color.GREEN, new dialog_3());
+		btPerform[++i] = new BtPerform("dialog4", i, Color.GREEN, new dialog_4());
+		btPerform[++i] = new BtPerform("dialog5", i, Color.GREEN, new dialog_5());
+		btPerform[++i] = new BtPerform("dialog6", i, Color.GREEN, new dialog_6());
+		btPerform[++i] = new BtPerform("xml to object", i, Color.YELLOW, new xmlToObject());
+		btPerform[++i] = new BtPerform("SYSTEM_UI_FLAG_VISIBLE", i, Color.CYAN, new systemUiFlagVisible());
+		btPerform[++i] = new BtPerform("INVISIBLE", i, Color.CYAN, new invisible());
+		btPerform[++i] = new BtPerform("SYSTEM_UI_FLAG_FULLSCREEN", i, Color.CYAN, new systemUiFlagFullScreen());
+		btPerform[++i] = new BtPerform("SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN", i, Color.CYAN, new systemUiFlagLayoutFullScreen());
+		btPerform[++i] = new BtPerform("SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION", i, Color.CYAN, new systemUiFlagLayoutHideNavigation());
+		btPerform[++i] = new BtPerform("SYSTEM_UI_LAYOUT_FLAGS", i, Color.CYAN, new systemUiLayoutFlags());
+		btPerform[++i] = new BtPerform("SYSTEM_UI_FLAG_HIDE_NAVIGATION", i, Color.CYAN, new systemUiFlagVisible());
+		btPerform[++i] = new BtPerform("SYSTEM_UI_FLAG_LOW_PROFILE", i, Color.CYAN, new systemUiFlagLowProfile());
+		btPerform[++i] = new BtPerform("call jni", i, Color.RED, new callJni());
+		btPerform[++i] = new BtPerform("screen info", i, Color.GRAY, new showScreenInfo());
+		btPerform[++i] = new BtPerform("database insert", i, Color.GREEN, new insertDatabase());
+		btPerform[++i] = new BtPerform("database update", i, Color.GREEN, new updateDatabase());
+		btPerform[++i] = new BtPerform("database show", i, Color.GREEN, new readDatabase());
+		btPerform[++i] = new BtPerform("sharedPreferences write", i, Color.GRAY, new sharedPreferencesWrite());
+		btPerform[++i] = new BtPerform("sharedPreferences read", i, Color.GRAY, new sharedPreferencesRead());
+		btPerform[++i] = new BtPerform("BaseNotification", i, Color.DKGRAY, new BaseNotification());
+		btPerform[++i] = new BtPerform("UpdateBaseNotification", i, Color.DKGRAY, new UpdateBaseNotification());
+		btPerform[++i] = new BtPerform("ClearBaseNotification", i, Color.DKGRAY, new ClearBaseNotification());
+		btPerform[++i] = new BtPerform("MediaNotification", i, Color.DKGRAY, new MediaNotification());
+		btPerform[++i] = new BtPerform("ClearMediaNotification", i, Color.DKGRAY, new ClearMediaNotification());
+		btPerform[++i] = new BtPerform("CustomNotification", i, Color.DKGRAY, new CustomNotification());
+		btPerform[++i] = new BtPerform("ClearAll", i, Color.DKGRAY, new ClearAllNotification());
+		btPerform[++i] = new BtPerform("end", i, Color.BLACK, null);
+		return btPerform;
+	}
+	
+	private void initDb(){
+		InputStream is = getResources().openRawResource(R.raw.apk_test);
+		FileOutputStream fos;
+		try {
+			fos = new FileOutputStream("/sdcard/apk_test.db");
+			byte[] buffer = new byte[8192];
+			int count = 0;
+			while ((count = is.read(buffer)) >= 0)
+			{
+				fos.write(buffer, 0, count);
 			}
+
+			fos.close();
+			is.close();
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
-		setContentView(myScrollView);
 	}
 	
 	public class BaseNotification implements Operation{
@@ -273,41 +284,6 @@ public class MainActivity extends Activity  implements OnClickListener{
 		public void operate() {
 			mRLayout.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LOW_PROFILE);
 		}
-	}
-	
-	private void initDb(){
-		InputStream is = getResources().openRawResource(R.raw.apk_test);
-		FileOutputStream fos;
-		try {
-			fos = new FileOutputStream("/sdcard/apk_test.db");
-			byte[] buffer = new byte[8192];
-			int count = 0;
-			while ((count = is.read(buffer)) >= 0)
-			{
-				fos.write(buffer, 0, count);
-			}
-
-			fos.close();
-			is.close();
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
-	
-	private void addButton(LinearLayout layout, int id, String msg, int color){
-		Button btn = new Button(this); 
-		btn.setText(msg);
-		btn.setId(id);
-		btn.setBackgroundColor(color);
-		layout.addView(btn);
-		btn.setOnClickListener(this);
-	}
-	
-	@Override
-	public void onClick(View view) {
-		mBtNameId[view.getId()].operate();
 	}
 	
 	public class callJni implements Operation{

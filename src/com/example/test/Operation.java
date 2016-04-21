@@ -1,4 +1,4 @@
-package com.example.test.common;
+package com.example.test;
 
 public interface Operation{
 	void operate();
