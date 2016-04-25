@@ -43,20 +43,11 @@
         
          <activity
             android:name="com.example.test.common.MainActivity"
-            android:label="@string/app_name" >
-            <intent-filter>
-                <action android:name="android.intent.action.COMMON" />
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-        </activity>
+            android:label="@string/app_name" />
         <activity
             android:name="com.example.test.aidl.ClientActivity"
-            android:label="@string/app_name" >
-            <intent-filter>
-                <action android:name="android.intent.action.AIDL" />
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-        </activity>
+            android:label="@string/app_name" />
+
 		 <service android:name="com.example.test.aidl.AidlService" android:process=":remote">
 			<intent-filter>
 				<action android:name="com.example.test.aidl.AidlService" />
@@ -70,68 +61,33 @@
        
         <activity
             android:name="com.example.test.asynctask.AsyncTaskActivity"
-            android:label="@string/app_name" >
-            <intent-filter>
-                <action android:name="android.intent.action.asynctask.ASYNCTASK" />
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-        </activity>
+            android:label="@string/app_name" />
         
        <activity
             android:name="com.example.test.customlistview.CustomListViewActivity"
-            android:label="@string/app_name" >
-            <intent-filter>
-                <action android:name="android.intent.action.CUSTOMLISTVIEW" />
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-        </activity>
+            android:label="@string/app_name"/>
 
         <activity
             android:name="com.example.test.camera.SystemCameraActivity"
-            android:label="@string/app_name" >
-            <intent-filter>
-                <action android:name="android.intent.action.SYSTEMCAMERA" />
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-        </activity>
+            android:label="@string/app_name" />
 
         <activity
             android:name="com.example.test.camera.CustomCameraActivity"
             android:configChanges="orientation|keyboardHidden"
             android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen"
-            android:label="@string/app_name" >
-            <intent-filter>
-                <action android:name="android.intent.action.CUSTOMCAMERA" />
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-        </activity>
+            android:label="@string/app_name" />
         
         <activity
             android:name="com.example.test.video.VideoViewActivity"
-            android:label="@string/app_name" >
-            <intent-filter>
-                <action android:name="android.intent.action.VIDEOVIEW" />
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-        </activity>
+            android:label="@string/app_name" />
         
         <activity
             android:name="com.example.test.html.HtmlCanvasActivity"
-            android:label="@string/app_name" >
-            <intent-filter>
-                <action android:name="android.intent.action.HTMLCANVAS" />
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-        </activity>
+            android:label="@string/app_name" />
         
         <activity
             android:name="com.example.test.crime.CrimeListActivity"
-            android:label="@string/app_name" >
-            <intent-filter>
-                <action android:name="android.intent.action.CRIMELIST" />
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-        </activity>
+            android:label="@string/app_name" />
         <activity
             android:name="com.example.test.crime.CrimePagerActivity"
             android:label="@string/app_name" >
@@ -139,85 +95,43 @@
         
         <activity
             android:name="com.example.test.diyviews.slidemenu.SlideMenuActivity"
-            android:label="@string/app_name" >
-            <intent-filter>
-                <action android:name="android.intent.action.SLIDEMENU" />
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-        </activity>
+            android:label="@string/app_name" />
         <activity
             android:name="com.example.test.diyviews.slidemenu.InfoActivity"
-            android:label="@string/app_name">
-        </activity>
+            android:label="@string/app_name" />
         
         <activity
             android:name="com.example.test.chatting.ChattingActivity"
-            android:label="@string/app_name" >
-            <intent-filter>
-                <action android:name="android.intent.action.CHATTING" />
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-        </activity>
+            android:label="@string/app_name" />
         
         <activity
             android:name="com.example.test.loopad.LoopAdActivity"
-            android:label="@string/app_name" >
-            <intent-filter>
-                <action android:name="android.intent.action.LOOPAD" />
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-        </activity>
-        
+            android:label="@string/app_name" />
+
         <activity
             android:name="com.example.test.viewpager.MainActivity"
-            android:label="@string/app_name" >
-            <intent-filter>
-                <action android:name="android.intent.action.VIEWPAGER" />
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-        </activity>
+            android:label="@string/app_name" />
         
          <activity
             android:name="com.example.test.bitmap.MainActivity"
             android:label="@string/app_name" 
-            android:hardwareAccelerated="false">
-            <intent-filter>
-                <action android:name="android.intent.action.BITMAP" />
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-        </activity>
+            android:hardwareAccelerated="false" />
 
 		<activity
             android:name="com.example.test.location.LocationActivity"
-            android:label="@string/app_name" >
-            <intent-filter>
-                <action android:name="android.intent.action.LOCATION" />
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-        </activity>
+            android:label="@string/app_name" />
 
 	   	<activity
             android:name="com.example.test.contentobserver.MainActivity"
-            android:label="@string/app_name" >
-            <intent-filter>
-                <action android:name="android.intent.action.CONTENTOBSERVER" />
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-        </activity>
+            android:label="@string/app_name" />
         
 	   <activity
             android:name="com.example.test.contentprovider.TeacherActivity"
-            android:label="@string/app_name" >
-            <intent-filter>
-                <action android:name="android.intent.action.CONTENTPROVIDER" />
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-        </activity>
+            android:label="@string/app_name" />
         <provider 
             android:name="com.example.test.contentprovider.TeacherContentProvider" 
             android:authorities="yj.android.contentProvider" 
-            android:multiprocess="false">
-        </provider>
+            android:multiprocess="false" />
         
          <activity
            android:name="com.example.test.qqauth.MainActivity"
@@ -246,12 +160,7 @@
 
          <activity
             android:name="com.example.test.sensors.ListViewActivity"
-            android:label="@string/app_name" >
-            <intent-filter>
-                <action android:name="android.intent.action.SENSORS" />
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-        </activity>
+            android:label="@string/app_name" />
         <activity android:name="com.example.test.sensors.Accelerometer"/>
         <activity android:name="com.example.test.sensors.AmbientTemperature"/>
         <activity android:name="com.example.test.sensors.Gravity"/>
@@ -267,53 +176,30 @@
         
         <activity
             android:name="com.example.test.binderpool.BinderPoolActivity"
-            android:label="@string/app_name" >
-            <intent-filter>
-                <action android:name="android.intent.action.BINDERPOOL" />
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-        </activity>
-        <service android:name="com.example.test.binderpool.BinderPoolService" android:process=":remote"></service>
+            android:label="@string/app_name" />
+        <service android:name="com.example.test.binderpool.BinderPoolService" android:process=":remote"/>
         
         <activity
             android:name="com.example.test.touch.MainActivity"
-            android:label="@string/app_name" >
-            <intent-filter>
-                <action android:name="android.intent.action.TOUCH" />
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-        </activity>
+            android:label="@string/app_name" />
         
         <activity
             android:name="com.example.test.diyviews.slidingconflict.MainActivity"
-            android:label="@string/app_name" >
-            <intent-filter>
-                <action android:name="android.intent.action.SLIDINGCONFLICT" />
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-        </activity>
+            android:label="@string/app_name" />
         
         <activity
             android:name="com.example.test.ble.central.CentralActivity"
             android:label="@string/app_name" 
-            android:theme="@android:style/Theme.Holo.Light">
-            <intent-filter>
-                <action android:name="android.intent.action.BLECENTRAL" />
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-        </activity>
+            android:theme="@android:style/Theme.Holo.Light"/>
         <activity 
             android:theme="@android:style/Theme.Holo.Light"
             android:name="com.example.test.ble.central.DeviceControlActivity"/>
         <service android:name="com.example.test.ble.central.BluetoothLeService" android:enabled="true"/>
+        
         <activity
             android:name="com.example.test.ble.peripheral.PeripheralActivity"
-            android:label="@string/app_name" >
-            <intent-filter>
-                <action android:name="android.intent.action.BLEPERIPHERAL" />
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-        </activity>
+            android:label="@string/app_name" />
         
+        <activity android:name="com.example.test.tablayout.MainActivity"/>
     </application>
 </manifest>

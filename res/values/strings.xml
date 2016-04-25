@@ -65,4 +65,10 @@
     <string name="menu_disconnect">Disconnect</string>
     <string name="menu_scan">Scan</string>
     <string name="menu_stop">Stop</string>
+    
+    
+    <string name="wechat">微信</string>
+    <string name="contacts">联系人</string>
+    <string name="discover">发现</string>
+    <string name="me">我</string>
 </resources>
